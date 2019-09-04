@@ -223,32 +223,34 @@ public class Puzzle {
         System.out.println("========================");
         System.out.println(initNode.toString());
 
-        Node solution = null;
+        Object[] solution = null;
 
         ArrayList<Node> foundNodes = new ArrayList<>();
         foundNodes.add(initNode);
+
         solution = solveRecur(foundNodes);
 
-
-
-        System.out.print("\n\nSOLUTION  of Depth " + solution.getDepth());
-        //System.out.println(" Total Nodes Expanded " + allNodes.size() + "\n");
-        printSolution(solution);
+        System.out.print("\n\nSOLUTION of Depth " + ((Node)solution[0]).getDepth() + ".");
+        System.out.println(" Total Nodes Expanded : " + solution[1] + "\n");
+        printSolution((Node)solution[0]);
 
     }
 //    Returns the solution node
-    private Node solveRecur(ArrayList<Node> foundNodes) {
+    private Object[] solveRecur(ArrayList<Node> foundNodes) {
         ArrayList<Node> temp = new ArrayList<>() ;
         for (Node node: foundNodes) {
             for (Node newnode: node.expand()) {
                 if (newnode.isGoal()) {
-                    return newnode;
+                    Object[] solution = new Object[2];
+                    solution[0] = newnode;
+                    solution[1] = (Integer) foundNodes.size();
+                    return solution;
                 }
                 temp.add(newnode);
             }
         }
 
-        // if newnodes aren't equal to found nodes, they are added to the list
+        // if new nodes aren't equal to found nodes, they are added to the list
         for (Node unchecked: temp) {
             boolean same = false;
             for (Node checked: foundNodes) {
