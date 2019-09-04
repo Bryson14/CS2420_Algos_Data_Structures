@@ -32,8 +32,10 @@ public class LinkedList {
     }
 
     public Node getNext() {
+
         return getNextRecur(head, 0);
     }
+
     private Node getNextRecur(Node node, int times) {
         if (times == count) {
             count++;

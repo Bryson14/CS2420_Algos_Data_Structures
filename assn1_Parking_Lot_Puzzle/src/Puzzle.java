@@ -225,6 +225,7 @@ public class Puzzle {
 
         Object[] solution = null;
 
+        // makes the necessary linked list
         LinkedList foundNodes = new LinkedList(initNode);
 
         solution = solveRecur(foundNodes);
@@ -236,20 +237,22 @@ public class Puzzle {
     }
 //    Returns the solution node
     private Object[] solveRecur(LinkedList foundNodes) {
+
+        // get every possibility from the current found nodes
         ArrayList<Node> temp = new ArrayList<>() ;
         for (int i = 0; i < foundNodes.getSize(); i++) {
             Node node = foundNodes.getNext();
+
             for (Node newnode: node.expand()) {
                 if (newnode.isGoal()) {
-                    Object[] solution = new Object[2];
-                    solution[0] = newnode;
-                    solution[1] = (Integer) foundNodes.getSize();
+                    Object[] solution = {newnode, foundNodes.getSize()};
                     return solution;
                 }
                 temp.add(newnode);
             }
         }
         foundNodes.resetCount();
+
         // if new nodes aren't equal to found nodes, they are added to the list
         for (Node unchecked: temp) {
             boolean same = false;
