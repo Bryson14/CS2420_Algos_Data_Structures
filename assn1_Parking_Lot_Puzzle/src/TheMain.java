@@ -14,7 +14,7 @@ public class TheMain {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // read all the puzzles in file.  Only the first few are solvable without additional strategies
         Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("jamsAll.txt");
-        //int num_puzzles = puzzles.length;
+//        int num_puzzles = puzzles.length;
         int num_puzzles = 6;
 
         boolean doPrint = true;

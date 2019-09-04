@@ -61,6 +61,8 @@ public class Puzzle {
 
         boolean grid[][] = new boolean[gridSize][gridSize];
 
+        // making copies of orient and size arrays. Validates their inputs as well
+
         for (int v = 0; v < numCars; v++) {
             carOrient[v] = orient[v];
             carSize[v] = size[v];
@@ -221,14 +223,45 @@ public class Puzzle {
         System.out.println("========================");
         System.out.println(initNode.toString());
 
-        //...
-        Node solution=null;
+        Node solution = null;
+
+        ArrayList<Node> foundNodes = new ArrayList<>();
+        foundNodes.add(initNode);
+        solution = solveRecur(foundNodes);
+
+
+
         System.out.print("\n\nSOLUTION  of Depth " + solution.getDepth());
         //System.out.println(" Total Nodes Expanded " + allNodes.size() + "\n");
         printSolution(solution);
 
     }
+//    Returns the solution node
+    private Node solveRecur(ArrayList<Node> foundNodes) {
+        ArrayList<Node> temp = new ArrayList<>() ;
+        for (Node node: foundNodes) {
+            for (Node newnode: node.expand()) {
+                if (newnode.isGoal()) {
+                    return newnode;
+                }
+                temp.add(newnode);
+            }
+        }
 
+        // if newnodes aren't equal to found nodes, they are added to the list
+        for (Node unchecked: temp) {
+            boolean same = false;
+            for (Node checked: foundNodes) {
+                if (unchecked.equals(checked)) {
+                    same = true;
+                }
+            }
+            if (!same) {
+                foundNodes.add(unchecked);
+            }
+        }
+        return solveRecur(foundNodes);
+    }
 
     /**
      * Print the series of moves (in order) to find the solution
