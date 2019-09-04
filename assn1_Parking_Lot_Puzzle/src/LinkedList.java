@@ -1,35 +1,31 @@
 public class LinkedList {
 
-    private String message;
-    private LinkedList next;
-    private LinkedList previous;
-    private String name;
+    private Node head, tail;
+    private int size;
 
-    LinkedList(String message, String name, LinkedList previous, LinkedList next) {
-        this.message = message;
-        this.name = name;
-        this.previous = previous;
-        this.next = null;
-    }
-    public boolean addNext(LinkedList next) {
-        try {
-            this.next = next;
-            return true;
-        }
-        catch (NullPointerException e) {
-            System.out.println("Pointer to null linked list node");
-            return false;
-        }
+    public LinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
     }
 
-    public boolean addPrevious(LinkedList previous) {
-        try {
-            this.previous = previous;
-            return true;
+    public LinkedList(Node node) {
+        this.head = node;
+        this.tail = node;
+        this.size++;
+    }
+
+    public void add(Node node) {
+        if (head == null) {
+            head = node;
         }
-        catch (NullPointerException e) {
-            System.out.println("Pointer to null linked list node");
-            return false;
-        }
+            this.tail = node;
+    }
+    protected int getSize() {
+        return size;
+    }
+
+    public void getNext(int i) {
+        return;
     }
 }
