@@ -10,6 +10,7 @@ public class Node {
     private int depth;       //Total number of moves in history
     private int grid[][];    //Current contents of grid in terms of car number.
     private int hashcode;    // state of grid in coded form (for easy comparison)
+    private Node next;
 
     final int GOAL_CAR = 0;
     /**
@@ -30,6 +31,7 @@ public class Node {
         this.depth = depth;
         getGrid();
         computeHashCode();
+        next = null;
     }
 
     public Node getParent() {
@@ -200,6 +202,13 @@ public class Node {
         for (int i = 0; i < varPos.length; i++) {
             hashcode = SHIFT * hashcode + varPos[i];
         }
+    }
+
+    public void addNext(Node node) {
+        next = node;
+    }
+    public Node getNext() {
+        return next;
     }
 
 }

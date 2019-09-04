@@ -1,7 +1,9 @@
 public class LinkedList {
 
-    private Node head, tail;
+    private Node head;
     private int size;
+    private Node tail;
+    private int count;
 
     public LinkedList() {
         this.head = null;
@@ -18,14 +20,29 @@ public class LinkedList {
     public void add(Node node) {
         if (head == null) {
             head = node;
-        }
+            tail = node;
+        } else {
+            tail.addNext(node);
             this.tail = node;
+            this.size++;
+        }
     }
     protected int getSize() {
         return size;
     }
 
-    public void getNext(int i) {
-        return;
+    public Node getNext() {
+        return getNextRecur(head, 0);
+    }
+    private Node getNextRecur(Node node, int times) {
+        if (times == count) {
+            count++;
+            return node;
+        } else {
+            return getNextRecur(node.getNext(), ++times);
+        }
+    }
+    public void resetCount() {
+        count = 0;
     }
 }

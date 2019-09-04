@@ -225,8 +225,7 @@ public class Puzzle {
 
         Object[] solution = null;
 
-        ArrayList<Node> foundNodes = new ArrayList<>();
-        foundNodes.add(initNode);
+        LinkedList foundNodes = new LinkedList(initNode);
 
         solution = solveRecur(foundNodes);
 
@@ -236,28 +235,31 @@ public class Puzzle {
 
     }
 //    Returns the solution node
-    private Object[] solveRecur(ArrayList<Node> foundNodes) {
+    private Object[] solveRecur(LinkedList foundNodes) {
         ArrayList<Node> temp = new ArrayList<>() ;
-        for (Node node: foundNodes) {
+        for (int i = 0; i < foundNodes.getSize(); i++) {
+            Node node = foundNodes.getNext();
             for (Node newnode: node.expand()) {
                 if (newnode.isGoal()) {
                     Object[] solution = new Object[2];
                     solution[0] = newnode;
-                    solution[1] = (Integer) foundNodes.size();
+                    solution[1] = (Integer) foundNodes.getSize();
                     return solution;
                 }
                 temp.add(newnode);
             }
         }
-
+        foundNodes.resetCount();
         // if new nodes aren't equal to found nodes, they are added to the list
         for (Node unchecked: temp) {
             boolean same = false;
-            for (Node checked: foundNodes) {
+            for (int i = 0; i < foundNodes.getSize(); i++) {
+                Node checked = foundNodes.getNext();
                 if (unchecked.equals(checked)) {
                     same = true;
                 }
             }
+            foundNodes.resetCount();
             if (!same) {
                 foundNodes.add(unchecked);
             }
