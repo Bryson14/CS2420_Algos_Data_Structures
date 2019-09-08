@@ -398,7 +398,7 @@ public class Tree<E extends Comparable<? super E>> {
         tree2.byLevelZigZag(3);
         treeA.flip();
         System.out.println(treeA.toString());
-        System.out.println("treeA Contains BST: " + treeA.coungtBST());
+        System.out.println("treeA Contains BST: " + treeA.countBST());
 
         System.out.println(treeB.toString());
         System.out.println("treeB Contains BST: " + treeB.countBST());
