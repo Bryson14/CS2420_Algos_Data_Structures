@@ -15,7 +15,7 @@ public class TheMain {
         // read all the puzzles in file.  Only the first few are solvable without additional strategies
         Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("jamsAll.txt");
 //        int num_puzzles = puzzles.length;
-        int num_puzzles = 6;
+        int num_puzzles = 7;
 
         boolean doPrint = true;
         // solve each of the first six puzzles.  The others will likely take too long

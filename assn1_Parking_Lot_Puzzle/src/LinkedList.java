@@ -32,7 +32,6 @@ public class LinkedList {
     }
 
     public Node getNext() {
-
         return getNextRecur(head, 0);
     }
 
