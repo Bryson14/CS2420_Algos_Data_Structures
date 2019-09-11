@@ -79,12 +79,25 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Return a string displaying the tree contents as a tree with one node per line
+     * O(n)
      */
     public String toString() {
-        if (root == null)
+        if (root == null) {
             return (treeName + " Empty tree\n");
-        else
-            return " ";
+        } else {
+            String space = "";
+            return "\n" + toStringRecur(root.left, space)  + "\n" + root.element +
+                    "[No Parent so sad]" + toStringRecur(root.right, space) + "\n";
+        }
+    }
+    private String toStringRecur(BinaryNode<E> node, String space) {
+        if (node == null) {
+            return "";
+        } else {
+            space += "  ";
+            return toStringRecur(node.left, space) + "\n" + space + node.element +
+                    "[" + node.parent.element + "]" + toStringRecur(node.right, space);
+        }
     }
 
     /**
@@ -99,9 +112,21 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * reverse left and right children recursively
+     * O(n)
      */
     public void flip() {
-        //flip(root);
+        flipRecur(root);
+    }
+
+    private void flipRecur(BinaryNode<E> node) {
+        if (node == null) {return;}
+
+        BinaryNode<E> leftOG = node.left;
+        node.left = node.right;
+        node.right = leftOG;
+
+        flipRecur(node.right);
+        flipRecur(node.left);
     }
 
     /**
@@ -372,7 +397,7 @@ public class Tree<E extends Comparable<? super E>> {
         System.out.println(tree1.toString());
         System.out.println(tree1.toString2());
 
-        System.out.println(treeA.toString());
+        System.out.println("Tree A" + treeA.toString());
 
         treeA.flip();
         System.out.println("Now flipped" + treeA.toString());
@@ -385,51 +410,51 @@ public class Tree<E extends Comparable<? super E>> {
             System.out.println("The next successor is " + tree2.successor());
         }
 
-        System.out.println(tree1.toString());
-        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
-            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
-        }
-        System.out.println("All paths from tree1");
-        tree1.printAllPaths();
-
-        System.out.print("Tree1 byLevelZigZag: ");
-        tree1.byLevelZigZag(5);
-        System.out.print("Tree2 byLevelZigZag (3): ");
-        tree2.byLevelZigZag(3);
-        treeA.flip();
-        System.out.println(treeA.toString());
-        System.out.println("treeA Contains BST: " + treeA.countBST());
-
-        System.out.println(treeB.toString());
-        System.out.println("treeB Contains BST: " + treeB.countBST());
-
-        treeB.pruneK(60);
-        treeB.changeName("treeB after pruning 60");
-        System.out.println(treeB.toString());
-        treeA.pruneK(220);
-        treeA.changeName("treeA after pruning 220");
-        System.out.println(treeA.toString());
-
-        treeC.buildTreeTraversals(inorder, preorder);
-        treeC.changeName("Tree C built from inorder and preorder traversals");
-        System.out.println(treeC.toString());
-
-        System.out.println(tree1.toString());
-        System.out.println("tree1 Least Common Ancestor of (56,61) " + tree1.lca(56, 61) + ENDLINE);
-
-        System.out.println("tree1 Least Common Ancestor of (6,25) " + tree1.lca(6, 25) + ENDLINE);
-        System.out.println(tree3.toString());
-        tree3.balanceTree();
-        tree3.changeName("tree3 after balancing");
-        System.out.println(tree3.toString());
-
-        System.out.println(tree1.toString());
-        tree1.keepRange(10, 50);
-        tree1.changeName("tree1 after keeping only nodes between 10 and 50");
-        System.out.println(tree1.toString());
-        tree3.keepRange(3, 85);
-        tree3.changeName("tree3 after keeping only nodes between 3  and 85");
-        System.out.println(tree3.toString());
+//        System.out.println(tree1.toString());
+//        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
+//            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
+//        }
+//        System.out.println("All paths from tree1");
+//        tree1.printAllPaths();
+//
+//        System.out.print("Tree1 byLevelZigZag: ");
+//        tree1.byLevelZigZag(5);
+//        System.out.print("Tree2 byLevelZigZag (3): ");
+//        tree2.byLevelZigZag(3);
+//        treeA.flip();
+//        System.out.println(treeA.toString());
+//        System.out.println("treeA Contains BST: " + treeA.countBST());
+//
+//        System.out.println(treeB.toString());
+//        System.out.println("treeB Contains BST: " + treeB.countBST());
+//
+//        treeB.pruneK(60);
+//        treeB.changeName("treeB after pruning 60");
+//        System.out.println(treeB.toString());
+//        treeA.pruneK(220);
+//        treeA.changeName("treeA after pruning 220");
+//        System.out.println(treeA.toString());
+//
+//        treeC.buildTreeTraversals(inorder, preorder);
+//        treeC.changeName("Tree C built from inorder and preorder traversals");
+//        System.out.println(treeC.toString());
+//
+//        System.out.println(tree1.toString());
+//        System.out.println("tree1 Least Common Ancestor of (56,61) " + tree1.lca(56, 61) + ENDLINE);
+//
+//        System.out.println("tree1 Least Common Ancestor of (6,25) " + tree1.lca(6, 25) + ENDLINE);
+//        System.out.println(tree3.toString());
+//        tree3.balanceTree();
+//        tree3.changeName("tree3 after balancing");
+//        System.out.println(tree3.toString());
+//
+//        System.out.println(tree1.toString());
+//        tree1.keepRange(10, 50);
+//        tree1.changeName("tree1 after keeping only nodes between 10 and 50");
+//        System.out.println(tree1.toString());
+//        tree3.keepRange(3, 85);
+//        tree3.changeName("tree3 after keeping only nodes between 3  and 85");
+//        System.out.println(tree3.toString());
 
 
     }
