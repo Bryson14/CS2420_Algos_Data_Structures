@@ -206,7 +206,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
             t.left = insert( x, t.left );
         else
             t.right = insert( x, t.right );
-+
+
         return balance(t);
     }
 
