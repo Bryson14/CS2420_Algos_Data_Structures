@@ -135,10 +135,36 @@ public class Tree<E extends Comparable<? super E>> {
      */
     public String successor() {
         if (curr == null) curr = root;
-        //curr = successor(curr);
+        if (curr.right != null) {
+            curr = min(curr.right);  //if right child exist, the successor is the min of that branch
+        } else if (curr.parent.left == curr) {
+            curr = curr.parent;  // if there no right child, then a right parent is successor
+        } else {
+            curr = successorAbove(curr.parent); // successor is null or is at least 2 levels up
+        }
         if (curr == null) return "null";
         else return curr.toString();
     }
+
+    private BinaryNode<E> successorAbove(BinaryNode<E> node) {
+            if (node == root) return null;
+
+            else if (node.parent.right == node) {
+                return successorAbove(node.parent);
+
+            } else return node.parent;
+    }
+
+    public String inorder(BinaryNode<E> node) {
+        if (node == null) {return "";}
+        return inorder(node.left) + " " + node.element + inorder(node.right);
+    }
+
+    private BinaryNode<E> min(BinaryNode<E> node) {
+        if (node.left != null) return min(node.left);
+        else return node;
+    }
+
 
     /**
      * Counts number of nodes in specifed level
@@ -146,8 +172,21 @@ public class Tree<E extends Comparable<? super E>> {
      * @return count of number of nodes at specified level
      */
     public int nodesInLevel(int level) {
-        return 0; //nodesInLevel(root, level);
+        if (level == 0) return 1;
+        return nodesInLevel(root, level, 0);
     }
+
+    private int nodesInLevel(BinaryNode<E> node, int level, int times) {
+        if (node == null) return 0;
+        if (times + 1 == level) {
+
+            if (node.left != null && node.right != null) return 2;
+            else if (node.left == null && node.right == null) return 0;
+            else return 1;
+
+        } else return nodesInLevel(node.left, level, ++times) + nodesInLevel(node.right, level, ++times);
+    }
+
 
     /**
      * Print all paths from root to leaves
@@ -394,26 +433,26 @@ public class Tree<E extends Comparable<? super E>> {
         Tree<Integer> treeA = new Tree<Integer>(v4, "TreeA:", 2);
         Tree<Integer> treeB = new Tree<Integer>(v5, "TreeB", 3);
         Tree<Integer> treeC = new Tree<Integer>("TreeC");
-        System.out.println(tree1.toString());
-        System.out.println(tree1.toString2());
-
-        System.out.println("Tree A" + treeA.toString());
-
-        treeA.flip();
-        System.out.println("Now flipped" + treeA.toString());
-
-        System.out.println(tree2.toString());
-        tree2.contains(val);  //Sets the current node inside the tree6 class.
-        int succCount = 5;  // how many successors do you want to see?
-        System.out.println("In Tree2, starting at " + val + ENDLINE);
-        for (int i = 0; i < succCount; i++) {
-            System.out.println("The next successor is " + tree2.successor());
-        }
-
 //        System.out.println(tree1.toString());
-//        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
-//            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
+//        System.out.println(tree1.toString2());
+//
+//        System.out.println("Tree A" + treeA.toString());
+//
+//        treeA.flip();
+//        System.out.println("Now flipped" + treeA.toString());
+//
+//        System.out.println(tree2.toString());
+//        tree2.contains(val);  //Sets the current node inside the tree6 class.
+//        int succCount = 15;  // how many successors do you want to see?
+//        System.out.println("In Tree2, starting at " + val + ENDLINE);
+//        for (int i = 0; i < succCount; i++) {
+//            System.out.println("The next successor is " + tree2.successor());
 //        }
+
+        System.out.println(tree1.toString());
+        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
+            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
+        }
 //        System.out.println("All paths from tree1");
 //        tree1.printAllPaths();
 //
