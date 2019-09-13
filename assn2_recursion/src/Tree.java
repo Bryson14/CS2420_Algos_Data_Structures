@@ -1,6 +1,7 @@
 // ******************ERRORS********************************
 // Throws UnderflowException as appropriate
 
+import javax.swing.plaf.basic.BasicDesktopIconUI;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -244,9 +245,50 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Remove all paths from tree that sum to less than given value
-     * @param sum: minimum path sum allowed in final tree
+     * @param k: minimum path sum allowed in final tree
      */
-    public void pruneK(Integer sum) {
+    public void pruneK(Integer k) {
+        Integer sum = (Integer)root.element;
+        if (largestPath(root.left, sum) >= k) {
+            pruneRecur(root.left, sum, k);
+        } else {
+            root.left = null;
+        }
+        if (largestPath(root.right, sum) >= k) {
+            pruneRecur(root.right, sum, k);
+        } else {
+            root.right = null;
+        }
+    }
+
+    private void pruneRecur(BinaryNode node, Integer sum, Integer k) {
+        if (node == null) return;
+        else {
+            sum += (Integer)node.element;
+            if (largestPath(node.left, sum) >= k) {
+                pruneRecur(node.left, sum, k);
+            } else {
+                node.left = null;
+            }
+            if (largestPath(node.right, sum) >= k) {
+                pruneRecur(node.right, sum, k);
+            } else {
+                node.right = null;
+            }
+        }
+    }
+
+    private Integer largestPath(BinaryNode node, Integer sum) {
+        if (node == null) {
+            return sum;
+        } else {
+            sum += (Integer)node.element;
+            Integer sumR = largestPath(node.right, sum);
+            Integer sumL = largestPath(node.left, sum);
+
+            if (sumR > sumL) return sumR;
+            else return sumL;
+        }
     }
 
     /**
@@ -459,32 +501,36 @@ public class Tree<E extends Comparable<? super E>> {
 //        for (int i = 0; i < succCount; i++) {
 //            System.out.println("The next successor is " + tree2.successor());
 //        }
-
-        System.out.println(tree1.toString());
-        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
-            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
-        }
-        System.out.println("All paths from tree1");
-        tree1.printAllPaths();
+//
+//        System.out.println(tree1.toString());
+//        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
+//            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
+//        }
+//        System.out.println("All paths from tree1");
+//        tree1.printAllPaths();
 //
 //        System.out.print("Tree1 byLevelZigZag: ");
 //        tree1.byLevelZigZag(5);
 //        System.out.print("Tree2 byLevelZigZag (3): ");
 //        tree2.byLevelZigZag(3);
 //        treeA.flip();
-//        System.out.println(treeA.toString());
+        System.out.println("tree A");
+        System.out.println(treeA.toString());
 //        System.out.println("treeA Contains BST: " + treeA.countBST());
 //
-//        System.out.println(treeB.toString());
+        System.out.println("tree B");
+        System.out.println(treeB.toString());
 //        System.out.println("treeB Contains BST: " + treeB.countBST());
 //
-//        treeB.pruneK(60);
-//        treeB.changeName("treeB after pruning 60");
-//        System.out.println(treeB.toString());
-//        treeA.pruneK(220);
-//        treeA.changeName("treeA after pruning 220");
-//        System.out.println(treeA.toString());
-//
+        System.out.println("Pruning tree B");
+        treeB.pruneK(60);
+        treeB.changeName("treeB after pruning 60");
+        System.out.println(treeB.toString());
+        System.out.println("Pruning tree A");
+        treeA.pruneK(220);
+        treeA.changeName("treeA after pruning 220");
+        System.out.println(treeA.toString());
+
 //        treeC.buildTreeTraversals(inorder, preorder);
 //        treeC.changeName("Tree C built from inorder and preorder traversals");
 //        System.out.println(treeC.toString());
