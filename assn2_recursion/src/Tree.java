@@ -192,7 +192,18 @@ public class Tree<E extends Comparable<? super E>> {
      * Print all paths from root to leaves
      */
     public void printAllPaths() {
+        printPaths(root.left, root.element.toString());
+        printPaths(root.right, root.element.toString());
+    }
 
+    private void printPaths(BinaryNode node, String path) {
+        if (node == null) {
+            System.out.println(path);
+        } else {
+            path += " " + node.element.toString();
+            printPaths(node.left, path);
+            printPaths(node.right, path);
+        }
     }
 
     /**
@@ -453,8 +464,8 @@ public class Tree<E extends Comparable<? super E>> {
         for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
             System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
         }
-//        System.out.println("All paths from tree1");
-//        tree1.printAllPaths();
+        System.out.println("All paths from tree1");
+        tree1.printAllPaths();
 //
 //        System.out.print("Tree1 byLevelZigZag: ");
 //        tree1.byLevelZigZag(5);
