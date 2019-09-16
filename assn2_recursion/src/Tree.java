@@ -87,7 +87,7 @@ public class Tree<E extends Comparable<? super E>> {
             return (treeName + " Empty tree\n");
         } else {
             String space = "";
-            return "\n" + toStringRecur(root.left, space)  + "\n" + root.element +
+            return treeName + "\n" + toStringRecur(root.left, space)  + "\n" + root.element +
                     "[No Parent so sad]" + toStringRecur(root.right, space) + "\n";
         }
     }
@@ -172,6 +172,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param level Level in tree, root is zero
      * @return count of number of nodes at specified level
      */
+    //TODO fix incorrect output
     public int nodesInLevel(int level) {
         if (level == 0) return 1;
         return nodesInLevel(root, level, 0);
@@ -193,25 +194,51 @@ public class Tree<E extends Comparable<? super E>> {
      * Print all paths from root to leaves
      */
     public void printAllPaths() {
-        printPaths(root.left, root.element.toString());
-        printPaths(root.right, root.element.toString());
+        if (root == null) System.out.println("No paths for you!");
+        else {
+            printPaths(root.left, root.element.toString());
+            printPaths(root.right, root.element.toString());
+        }
     }
 
     private void printPaths(BinaryNode node, String path) {
         if (node == null) {
             System.out.println(path);
-        } else {
+        } else if (node.right != null && node.left != null){
             path += " " + node.element.toString();
             printPaths(node.left, path);
             printPaths(node.right, path);
-        }
+        } else if (node.right == null) {
+            path += " " + node.element.toString();
+            printPaths(node.left, path);
+        } else {
+            path += " " + node.element.toString();
+            printPaths(node.right, path);
+        } // extra logic stops double printing
     }
 
     /**
      * Print contents of levels in zig zag order starting at maxLevel
      * @param maxLevel
      */
+    // TODO write zigzag function
     public void byLevelZigZag(int maxLevel) {
+        if (root == null) System.out.println("Empty Tree\n");
+        else if (maxLevel <= 0) System.out.println(root.element);
+        else {
+            zigZagger(root.left, 1, maxLevel);
+            zigZagger(root.right, 1, maxLevel);
+            System.out.println(root.element);
+        }
+    }
+    private void zigZagger(BinaryNode node, int currLevel, int maxLevel) {
+        if (node == null) return;
+        else if (maxLevel <= currLevel) System.out.println(node.element);
+        else {
+            zigZagger(node.left, ++currLevel, maxLevel);
+            zigZagger(node.right, ++currLevel, maxLevel);
+            System.out.println(node.element);
+        }
 
     }
 
@@ -221,8 +248,45 @@ public class Tree<E extends Comparable<? super E>> {
      */
     public Integer countBST() {
         if (root == null) return 0;
-        return -1;
+        try {
+            Integer x = (Integer)root.element;
+        } catch (NumberFormatException e) {
+            System.out.println("count BST works only with comparable values, AKA Integers." + e);
+            return 0;
+        }
+        return countBSTRecur(root);
     }
+
+    private Integer countBSTRecur(BinaryNode node) {
+        if (node == null) return 0;
+
+        Integer BSTOnLeft = countBSTRecur(node.left);
+        Integer BSTOnRight = countBSTRecur(node.right);
+
+        if (isBST(node)) {
+            return BSTOnLeft + BSTOnRight + 1;
+        } else return BSTOnLeft + BSTOnRight;
+    }
+
+    /*
+    checks if node and everything below is a bst
+     */
+    private Boolean isBST(BinaryNode node) {
+        if (node == null) return true;
+
+        if (node.right == null && node.left == null) {
+            return true;
+        } else if (node.right == null) {
+            if ((Integer)node.left.element < (Integer)node.element) return isBST(node.left);
+            else return false;
+        } else if (node.left == null) {
+            if ((Integer)node.right.element > (Integer)node.element) return isBST(node.right);
+            return false;
+        } else if ((Integer)node.right.element > (Integer)node.element && (Integer)node.left.element < (Integer)node.element){
+            return isBST(node.right) && isBST(node.left);
+        } else {return false;}
+    }
+
 
     /**
      * Insert into a bst tree; duplicates are allowed
@@ -296,6 +360,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param inOrder  List of tree nodes in inorder
      * @param preOrder List of tree nodes in preorder
      */
+    // TODO write this function
     public void buildTreeTraversals(E[] inOrder, E[] preOrder) {
         root = null;
     }
@@ -306,6 +371,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param b second node
      * @return String representation of ancestor
      */
+    // TODO write this function
     public String lca(E a, E b) {
         BinaryNode<E> ancestor = null;
 //        if (a.compareTo(b) < 0) {
@@ -320,6 +386,7 @@ public class Tree<E extends Comparable<? super E>> {
     /**
      * Balance the tree
      */
+    // TODO write this function
     public void balanceTree() {
         //root = balanceTree(root);
     }
@@ -329,6 +396,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param a lowest value
      * @param b highest value
      */
+    // TODO write this function
     public void keepRange(E a, E b) {
     }
 
@@ -489,39 +557,40 @@ public class Tree<E extends Comparable<? super E>> {
 //        System.out.println(tree1.toString());
 //        System.out.println(tree1.toString2());
 //
-//        System.out.println("Tree A" + treeA.toString());
+//        System.out.println(treeA.toString());
 //
 //        treeA.flip();
-//        System.out.println("Now flipped" + treeA.toString());
+//        System.out.println("Now flipped\n" + treeA.toString());
 //
 //        System.out.println(tree2.toString());
 //        tree2.contains(val);  //Sets the current node inside the tree6 class.
-//        int succCount = 15;  // how many successors do you want to see?
+//        int succCount = 6;  // how many successors do you want to see?
 //        System.out.println("In Tree2, starting at " + val + ENDLINE);
 //        for (int i = 0; i < succCount; i++) {
 //            System.out.println("The next successor is " + tree2.successor());
 //        }
-//
+
+        System.out.println(tree1.toString());
+        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
+            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
+        }
+        System.out.println("All paths from tree1");
+        tree1.printAllPaths();
+
 //        System.out.println(tree1.toString());
-//        for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
-//            System.out.println("Number nodes at level " + mylevel + " is " + tree1.nodesInLevel(mylevel));
-//        }
-//        System.out.println("All paths from tree1");
-//        tree1.printAllPaths();
-//
 //        System.out.print("Tree1 byLevelZigZag: ");
 //        tree1.byLevelZigZag(5);
 //        System.out.print("Tree2 byLevelZigZag (3): ");
 //        tree2.byLevelZigZag(3);
-//        treeA.flip();
+        treeA.flip();
         System.out.println("tree A");
         System.out.println(treeA.toString());
-//        System.out.println("treeA Contains BST: " + treeA.countBST());
-//
+        System.out.println("treeA Contains BST: " + treeA.countBST());
+
         System.out.println("tree B");
         System.out.println(treeB.toString());
-//        System.out.println("treeB Contains BST: " + treeB.countBST());
-//
+        System.out.println("treeB Contains BST: " + treeB.countBST());
+
         System.out.println("Pruning tree B");
         treeB.pruneK(60);
         treeB.changeName("treeB after pruning 60");
