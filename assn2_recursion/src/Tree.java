@@ -156,11 +156,6 @@ public class Tree<E extends Comparable<? super E>> {
             } else return node.parent;
     }
 
-    public String inorder(BinaryNode<E> node) {
-        if (node == null) {return "";}
-        return inorder(node.left) + " " + node.element + inorder(node.right);
-    }
-
     private BinaryNode<E> min(BinaryNode<E> node) {
         if (node.left != null) return min(node.left);
         else return node;
@@ -168,13 +163,13 @@ public class Tree<E extends Comparable<? super E>> {
 
 
     /**
-     * Counts number of nodes in specifed level
+     * Counts number of nodes in specified level
      * @param level Level in tree, root is zero
      * @return count of number of nodes at specified level
      */
-    //TODO fix incorrect output
+    //TODO fix incorrect output nodesInLevel
     public int nodesInLevel(int level) {
-        if (level == 0) return 1;
+        if (level <= 0) return 1;
         return nodesInLevel(root, level, 0);
     }
 
@@ -360,7 +355,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param inOrder  List of tree nodes in inorder
      * @param preOrder List of tree nodes in preorder
      */
-    // TODO write this function
+    // TODO write this function Build Tree from Traversals
     public void buildTreeTraversals(E[] inOrder, E[] preOrder) {
         root = null;
     }
@@ -371,7 +366,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param b second node
      * @return String representation of ancestor
      */
-    // TODO write this function
+    // TODO write this function Lowest Common Ancestor
     public String lca(E a, E b) {
         BinaryNode<E> ancestor = null;
 //        if (a.compareTo(b) < 0) {
@@ -386,9 +381,14 @@ public class Tree<E extends Comparable<? super E>> {
     /**
      * Balance the tree
      */
-    // TODO write this function
+    // TODO write this function Balance Tree
     public void balanceTree() {
         //root = balanceTree(root);
+    }
+    private Integer getDepth(BinaryNode node, int depth) {
+
+        if (node == null) return depth;
+        else return Math.max(getDepth(node.left, ++depth),getDepth(node.right, ++depth));
     }
 
     /**
@@ -396,8 +396,22 @@ public class Tree<E extends Comparable<? super E>> {
      * @param a lowest value
      * @param b highest value
      */
-    // TODO write this function
+    // TODO write this function Keep Range
     public void keepRange(E a, E b) {
+        keepRangeRecur(root, a, b);
+    }
+    private void keepRangeRecur(BinaryNode node, E a, E b) {
+        if (node == null) return;
+        if (a.compareTo((E)node.element) < 0 && b.compareTo((E)node.element) > 0) {  //node is within a-b bounds so keep it
+            keepRangeRecur(node.left, a, b);
+            keepRangeRecur(node.right, a, b);
+        } else if (a.compareTo((E)node.element) > 0) {
+            if (node.parent.right == node) node.parent.right = null;
+            else node.parent.left = null; // TODO could mess up a root
+        } else if (b.compareTo((E)node.element) < 0) {
+            if (node.parent.right == node) node.parent.right = null;
+            else node.parent.left = null; // TODO could mess up a root
+        }
     }
 
     //PRIVATE
@@ -439,10 +453,8 @@ public class Tree<E extends Comparable<? super E>> {
         } else {
             t.right = bstInsert(x, t.right, t);
         }
-
         return t;
     }
-
 
     /**
      * Internal method to find an item in a subtree.
@@ -470,8 +482,6 @@ public class Tree<E extends Comparable<? super E>> {
             return true;    // Match
         }
     }
-
-
 
     /**
      * Internal method to return a string of items in the tree in order
@@ -517,12 +527,9 @@ public class Tree<E extends Comparable<? super E>> {
                 sb.append(parent.element);
                 sb.append(">");
             }
-
             return sb.toString();
         }
-
     }
-
 
     // Test program
     public static void main(String[] args) {
@@ -554,21 +561,21 @@ public class Tree<E extends Comparable<? super E>> {
         Tree<Integer> treeA = new Tree<Integer>(v4, "TreeA:", 2);
         Tree<Integer> treeB = new Tree<Integer>(v5, "TreeB", 3);
         Tree<Integer> treeC = new Tree<Integer>("TreeC");
-//        System.out.println(tree1.toString());
-//        System.out.println(tree1.toString2());
-//
-//        System.out.println(treeA.toString());
-//
-//        treeA.flip();
-//        System.out.println("Now flipped\n" + treeA.toString());
-//
-//        System.out.println(tree2.toString());
-//        tree2.contains(val);  //Sets the current node inside the tree6 class.
-//        int succCount = 6;  // how many successors do you want to see?
-//        System.out.println("In Tree2, starting at " + val + ENDLINE);
-//        for (int i = 0; i < succCount; i++) {
-//            System.out.println("The next successor is " + tree2.successor());
-//        }
+        System.out.println(tree1.toString());
+        System.out.println(tree1.toString2());
+
+        System.out.println(treeA.toString());
+
+        treeA.flip();
+        System.out.println("Now flipped\n" + treeA.toString());
+
+        System.out.println(tree2.toString());
+        tree2.contains(val);  //Sets the current node inside the tree6 class.
+        int succCount = 6;  // how many successors do you want to see?
+        System.out.println("In Tree2, starting at " + val + ENDLINE);
+        for (int i = 0; i < succCount; i++) {
+            System.out.println("The next successor is " + tree2.successor());
+        }
 
         System.out.println(tree1.toString());
         for (int mylevel = 0; mylevel < SIZE; mylevel += 2) {
@@ -577,11 +584,15 @@ public class Tree<E extends Comparable<? super E>> {
         System.out.println("All paths from tree1");
         tree1.printAllPaths();
 
-//        System.out.println(tree1.toString());
-//        System.out.print("Tree1 byLevelZigZag: ");
-//        tree1.byLevelZigZag(5);
-//        System.out.print("Tree2 byLevelZigZag (3): ");
-//        tree2.byLevelZigZag(3);
+        System.out.println(tree1.toString());
+        System.out.print("Tree1 byLevelZigZag: ");
+        tree1.byLevelZigZag(5);
+        System.out.print("Tree2 byLevelZigZag (3): ");
+        tree2.byLevelZigZag(3);
+
+        System.out.println("tree A");
+        System.out.println(treeA.toString());
+        System.out.println("treeA Contains BST: " + treeA.countBST());
         treeA.flip();
         System.out.println("tree A");
         System.out.println(treeA.toString());
