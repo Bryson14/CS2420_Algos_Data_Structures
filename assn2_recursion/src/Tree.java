@@ -167,7 +167,6 @@ public class Tree<E extends Comparable<? super E>> {
      * @param level Level in tree, root is zero
      * @return count of number of nodes at specified level
      */
-    //TODO fix incorrect output nodesInLevel
     public int nodesInLevel(int level) {
         if (level <= 0) return 1;
         return nodesInLevel(root, level, 0);
@@ -181,7 +180,7 @@ public class Tree<E extends Comparable<? super E>> {
             else if (node.left == null && node.right == null) return 0;
             else return 1;
 
-        } else return nodesInLevel(node.left, level, ++times) + nodesInLevel(node.right, level, ++times);
+        } else return nodesInLevel(node.left, level, times + 1) + nodesInLevel(node.right, level, times + 1);
     }
 
 
@@ -632,7 +631,5 @@ public class Tree<E extends Comparable<? super E>> {
 //        tree3.changeName("tree3 after keeping only nodes between 3  and 85");
 //        System.out.println(tree3.toString());
 
-
     }
-
 }
