@@ -168,11 +168,13 @@ public class Tree<E extends Comparable<? super E>> {
      * @return count of number of nodes at specified level
      */
     public int nodesInLevel(int level) {
+
         if (level <= 0) return 1;
         return nodesInLevel(root, level, 0);
     }
 
     private int nodesInLevel(BinaryNode<E> node, int level, int times) {
+
         if (node == null) return 0;
         if (times + 1 == level) {
 
@@ -188,6 +190,7 @@ public class Tree<E extends Comparable<? super E>> {
      * Print all paths from root to leaves
      */
     public void printAllPaths() {
+
         if (root == null) System.out.println("No paths for you!");
         else {
             printPaths(root.left, root.element.toString());
@@ -196,6 +199,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
 
     private void printPaths(BinaryNode node, String path) {
+
         if (node == null) {
             System.out.println(path);
         } else if (node.right != null && node.left != null){
@@ -217,6 +221,7 @@ public class Tree<E extends Comparable<? super E>> {
      */
     // TODO write zigzag function
     public void byLevelZigZag(int maxLevel) {
+
         if (root == null) System.out.println("Empty Tree\n");
         else if (maxLevel <= 0) System.out.println(root.element);
         else {
@@ -226,6 +231,7 @@ public class Tree<E extends Comparable<? super E>> {
         }
     }
     private void zigZagger(BinaryNode node, int currLevel, int maxLevel) {
+
         if (node == null) return;
         else if (maxLevel <= currLevel) System.out.println(node.element);
         else {
@@ -241,6 +247,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @return Count of embedded binary search trees
      */
     public Integer countBST() {
+
         if (root == null) return 0;
         try {
             Integer x = (Integer)root.element;
@@ -252,6 +259,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
 
     private Integer countBSTRecur(BinaryNode node) {
+
         if (node == null) return 0;
 
         Integer BSTOnLeft = countBSTRecur(node.left);
@@ -266,6 +274,7 @@ public class Tree<E extends Comparable<? super E>> {
     checks if node and everything below is a bst
      */
     private Boolean isBST(BinaryNode node) {
+
         if (node == null) return true;
 
         if (node.right == null && node.left == null) {
@@ -306,6 +315,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @param k: minimum path sum allowed in final tree
      */
     public void pruneK(Integer k) {
+
         Integer sum = (Integer)root.element;
         if (largestPath(root.left, sum) >= k) {
             pruneRecur(root.left, sum, k);
@@ -320,6 +330,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
 
     private void pruneRecur(BinaryNode node, Integer sum, Integer k) {
+
         if (node == null) return;
         else {
             sum += (Integer)node.element;
@@ -337,6 +348,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
 
     private Integer largestPath(BinaryNode node, Integer sum) {
+
         if (node == null) {
             return sum;
         } else {
@@ -356,8 +368,24 @@ public class Tree<E extends Comparable<? super E>> {
      */
     // TODO write this function Build Tree from Traversals
     public void buildTreeTraversals(E[] inOrder, E[] preOrder) {
+
         root = null;
+
+        if (inOrder.length <= 0 || preOrder.length <= 0){
+            System.out.println("Empty In-order and pre-order list given silly goose!");
+
+        } else{
+            E rootValue = preOrder[0];
+            BinaryNode<E> root = new BinaryNode(preOrder, null, null , null);
+            buildTreeTraversals(root, root, inOrder, preOrder);
+            buildTreeTraversals(root, root, inOrder, preOrder);
+        }
+
     }
+    public void buildTreeTraversals(BinaryNode node, BinaryNode parent, E[] inOrder, E[] preOrder){
+
+    }
+
 
     /**
      * Find the least common ancestor of two nodes
@@ -367,6 +395,7 @@ public class Tree<E extends Comparable<? super E>> {
      */
     // TODO write this function Lowest Common Ancestor
     public String lca(E a, E b) {
+
         BinaryNode<E> ancestor = null;
 //        if (a.compareTo(b) < 0) {
 //            ancestor = lca(root, a, b);
@@ -382,12 +411,13 @@ public class Tree<E extends Comparable<? super E>> {
      */
     // TODO write this function Balance Tree
     public void balanceTree() {
+
         //root = balanceTree(root);
     }
     private Integer getDepth(BinaryNode node, int depth) {
 
         if (node == null) return depth;
-        else return Math.max(getDepth(node.left, ++depth),getDepth(node.right, ++depth));
+        else return Math.max(getDepth(node.left, depth + 1),getDepth(node.right, depth + 1));
     }
 
     /**
@@ -397,9 +427,11 @@ public class Tree<E extends Comparable<? super E>> {
      */
     // TODO write this function Keep Range
     public void keepRange(E a, E b) {
+
         keepRangeRecur(root, a, b);
     }
     private void keepRangeRecur(BinaryNode node, E a, E b) {
+
         if (node == null) return;
         if (a.compareTo((E)node.element) < 0 && b.compareTo((E)node.element) > 0) {  //node is within a-b bounds so keep it
             keepRangeRecur(node.left, a, b);
@@ -424,6 +456,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @return new tree
      */
     private BinaryNode<E> buildTree(ArrayList<E> arr, int height, BinaryNode<E> parent) {
+
         if (arr.isEmpty()) return null;
         BinaryNode<E> curr = new BinaryNode<>(arr.remove(0), null, null, parent);
         if (height > 0) {
@@ -442,6 +475,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @return the new root of the subtree.
      */
     private BinaryNode<E> bstInsert(E x, BinaryNode<E> t, BinaryNode<E> parent) {
+
         if (t == null)
             return new BinaryNode<>(x, null, null, parent);
 
@@ -466,6 +500,7 @@ public class Tree<E extends Comparable<? super E>> {
      * @return node containing the matched item.
      */
     private boolean bstContains(E x, BinaryNode<E> t) {
+
         curr = null;
         if (t == null)
             return false;
