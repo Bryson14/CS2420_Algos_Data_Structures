@@ -2,6 +2,7 @@
 // Throws UnderflowException as appropriate
 
 import javax.swing.plaf.basic.BasicDesktopIconUI;
+import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,8 +88,8 @@ public class Tree<E extends Comparable<? super E>> {
             return (treeName + " Empty tree\n");
         } else {
             String space = "";
-            return treeName + "\n" + toStringRecur(root.left, space)  + "\n" + root.element +
-                    "[No Parent so sad]" + toStringRecur(root.right, space) + "\n";
+            return treeName + "\n" + toStringRecur(root.right, space)  + "\n" + root.element +
+                    "[No Parent so sad]" + toStringRecur(root.left, space) + "\n";
         }
     }
     private String toStringRecur(BinaryNode<E> node, String space) {
@@ -96,13 +97,14 @@ public class Tree<E extends Comparable<? super E>> {
             return "";
         } else {
             space += "  ";
-            return toStringRecur(node.left, space) + "\n" + space + node.element +
-                    "[" + node.parent.element + "]" + toStringRecur(node.right, space);
+            return toStringRecur(node.right, space) + "\n" + space + node.element +
+                    "[" + node.parent.element + "]" + toStringRecur(node.left, space);
         }
     }
 
     /**
      * Return a string displaying the tree contents as a single line
+     * O(n)
      */
     public String toString2() {
         if (root == null)
@@ -217,29 +219,38 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Print contents of levels in zig zag order starting at maxLevel
-     * @param maxLevel
+     * @param maxLevel deepest level of print desired
      */
-    // TODO write zigzag function
     public void byLevelZigZag(int maxLevel) {
 
-        if (root == null) System.out.println("Empty Tree\n");
+        if (root == null) System.out.println("Empty Tree :(");
         else if (maxLevel <= 0) System.out.println(root.element);
-        else {
-            zigZagger(root.left, 1, maxLevel);
-            zigZagger(root.right, 1, maxLevel);
-            System.out.println(root.element);
+        else{
+
+            for (int i = maxLevel; i >= 0; i--) {
+                zigZagger(root, i, 0);
+
+            }
         }
     }
-    private void zigZagger(BinaryNode node, int currLevel, int maxLevel) {
 
-        if (node == null) return;
-        else if (maxLevel <= currLevel) System.out.println(node.element);
-        else {
-            zigZagger(node.left, ++currLevel, maxLevel);
-            zigZagger(node.right, ++currLevel, maxLevel);
-            System.out.println(node.element);
+    private void zigZagger(BinaryNode node, int searchLevel, int currentLevel) {
+        if (node != null) {
+
+            if (currentLevel == searchLevel) {
+
+                System.out.print(node.element + " ");
+
+                // if search level is even, then zigzagger prints from left to right
+            } else if (searchLevel % 2 == 0) {
+                zigZagger(node.left, searchLevel, currentLevel + 1);
+                zigZagger(node.right, searchLevel, currentLevel + 1);
+
+            } else {
+                zigZagger(node.right, searchLevel, currentLevel + 1);
+                zigZagger(node.left, searchLevel, currentLevel + 1);
+            }
         }
-
     }
 
     /**
@@ -270,8 +281,10 @@ public class Tree<E extends Comparable<? super E>> {
         } else return BSTOnLeft + BSTOnRight;
     }
 
-    /*
-    checks if node and everything below is a bst
+    /**
+    Checks if BST from a given node
+     @param node A Binary node in the tree
+     @return boolean of if node is locally a BST
      */
     private Boolean isBST(BinaryNode node) {
 
@@ -366,24 +379,46 @@ public class Tree<E extends Comparable<? super E>> {
      * @param inOrder  List of tree nodes in inorder
      * @param preOrder List of tree nodes in preorder
      */
-    // TODO write this function Build Tree from Traversals
     public void buildTreeTraversals(E[] inOrder, E[] preOrder) {
 
-        root = null;
+        if (inOrder.length <= 0 || preOrder.length <= 0) System.out.println("Empty In-order or pre-order list given, silly goose!");
+        else {
 
-        if (inOrder.length <= 0 || preOrder.length <= 0){
-            System.out.println("Empty In-order and pre-order list given silly goose!");
-
-        } else{
-            E rootValue = preOrder[0];
-            BinaryNode<E> root = new BinaryNode(preOrder, null, null , null);
-            buildTreeTraversals(root, root, inOrder, preOrder);
-            buildTreeTraversals(root, root, inOrder, preOrder);
+            List<E> preorder = new ArrayList<>();
+            List<E> inorder = new ArrayList<>();
+            for (int i = 0; i < preOrder.length; i++) {
+                preorder.add(preOrder[i]);
+                inorder.add(inOrder[i]);
+            }
+            buildTreeTraversals(null, inorder, preorder, true);
         }
-
     }
-    public void buildTreeTraversals(BinaryNode node, BinaryNode parent, E[] inOrder, E[] preOrder){
 
+    private void buildTreeTraversals(BinaryNode parent, List<E> inOrder, List<E> preOrder, Boolean onLeft){
+        if (!(inOrder.size() <= 0 || preOrder.size() <= 0)) {
+            BinaryNode newParent;
+            if (parent == null)  {
+                root = new BinaryNode<>(preOrder.get(0), null, null, null);
+                newParent = root;
+            } else{
+                newParent = new BinaryNode<>(preOrder.get(0), null, null, parent);
+                if (onLeft) parent.left = newParent;
+                else parent.right = newParent;
+            }
+
+            List<E> inOrderL = split(inOrder, preOrder.get(0), true);
+            List<E> inOrderR = split(inOrder, preOrder.get(0), false);
+            List<E> preOrderL = preOrder.subList(1, inOrderL.size() + 1);
+            List<E> preOrderR = preOrder.subList(inOrderL.size() + 1, preOrder.size());
+            buildTreeTraversals(newParent, inOrderL, preOrderL, true);
+            buildTreeTraversals(newParent, inOrderR, preOrderR, false);
+        }
+    }
+
+    private List<E> split(List<E> list, E marker, Boolean swap) {
+        int idx = list.indexOf(marker);
+        if (swap) return list.subList(0, idx);
+        else return list.subList(idx + 1, list.size());
     }
 
 
@@ -621,6 +656,7 @@ public class Tree<E extends Comparable<? super E>> {
         System.out.println(tree1.toString());
         System.out.print("Tree1 byLevelZigZag: ");
         tree1.byLevelZigZag(5);
+        System.out.println(tree2.toString());
         System.out.print("Tree2 byLevelZigZag (3): ");
         tree2.byLevelZigZag(3);
 
@@ -645,9 +681,9 @@ public class Tree<E extends Comparable<? super E>> {
         treeA.changeName("treeA after pruning 220");
         System.out.println(treeA.toString());
 
-//        treeC.buildTreeTraversals(inorder, preorder);
-//        treeC.changeName("Tree C built from inorder and preorder traversals");
-//        System.out.println(treeC.toString());
+        treeC.buildTreeTraversals(inorder, preorder);
+        treeC.changeName("Tree C built from inorder and preorder traversals");
+        System.out.println(treeC.toString());
 //
 //        System.out.println(tree1.toString());
 //        System.out.println("tree1 Least Common Ancestor of (56,61) " + tree1.lca(56, 61) + ENDLINE);
