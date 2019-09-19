@@ -135,6 +135,7 @@ public class Tree<E extends Comparable<? super E>> {
     /**
      * Find successor of "curr" node in tree
      * @return String representation of the successor
+     * O(log(n))
      */
     public String successor() {
         if (curr == null) curr = root;
@@ -342,6 +343,13 @@ public class Tree<E extends Comparable<? super E>> {
         }
     }
 
+    /**
+     * Recursive call for prune
+     *
+     * @param node BinaryNode
+     * @param sum Integer
+     * @param k Integer min path sum allowed in final tree
+     */
     private void pruneRecur(BinaryNode node, Integer sum, Integer k) {
 
         if (node == null) return;
@@ -360,6 +368,13 @@ public class Tree<E extends Comparable<? super E>> {
         }
     }
 
+    /**
+     * return the largest sum possible from node to a leaf
+     *
+     * @param node BinaryNode
+     * @param sum Integer
+     * @return Integer
+     */
     private Integer largestPath(BinaryNode node, Integer sum) {
 
         if (node == null) {
@@ -376,6 +391,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Build tree given inOrder and preOrder traversals.  Each value is unique
+     *
      * @param inOrder  List of tree nodes in inorder
      * @param preOrder List of tree nodes in preorder
      */
@@ -394,6 +410,14 @@ public class Tree<E extends Comparable<? super E>> {
         }
     }
 
+    /**
+     * Builds a tree from lists of its own preorder and inorder traversals
+     *
+     * @param parent Binary node to be connected to
+     * @param inOrder List<E> inorder traversal of tree being built
+     * @param preOrder List<E> preorder traversal of tree being built
+     * @param onLeft Boolean is newParent node to the left of parent
+     */
     private void buildTreeTraversals(BinaryNode parent, List<E> inOrder, List<E> preOrder, Boolean onLeft){
         if (!(inOrder.size() <= 0 || preOrder.size() <= 0)) {
             BinaryNode newParent;
@@ -415,6 +439,14 @@ public class Tree<E extends Comparable<? super E>> {
         }
     }
 
+    /**
+     * Splits a list into two using marker to be the dividing point
+     *
+     * @param list List<E> list to be split
+     * @param marker E point at which to divide list
+     * @param swap Boolean returns if right or left sublist is wanted
+     * @return Lis<E> sublist split at marker
+     */
     private List<E> split(List<E> list, E marker, Boolean swap) {
         int idx = list.indexOf(marker);
         if (swap) return list.subList(0, idx);
@@ -424,21 +456,56 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Find the least common ancestor of two nodes
+     *
      * @param a first node
      * @param b second node
      * @return String representation of ancestor
      */
-    // TODO write this function Lowest Common Ancestor
     public String lca(E a, E b) {
 
+        // one of the items is not in the tree, so the other is its own ancestor
+        if (!exists(root, a) || !exists(root, b)) {
+            if (exists(root, a)) return a.toString();
+            else return b.toString();
+        }
+
         BinaryNode<E> ancestor = null;
-//        if (a.compareTo(b) < 0) {
-//            ancestor = lca(root, a, b);
-//        } else {
-//            ancestor = lca(root, b, a);
-//        }
+        if (a.compareTo(b) < 0) {
+            ancestor = lca(root, a, b);
+        } else {
+            ancestor = lca(root, b, a);
+        }
         if (ancestor == null) return "none";
         else return ancestor.toString();
+    }
+
+    /**
+     * Recursive Least common ancestor call
+     *
+     * @param node BinaryNode last known node to have both a and b as children
+     * @param a E
+     * @param b E
+     * @return BinaryNode Least Common Ancestor of a & b
+     */
+    private BinaryNode lca(BinaryNode node, E a, E b){
+        if (exists(node.left, a) && exists(node.left, b)) return lca(node.left, a, b);
+        else if (exists(node.right, a) && exists(node.right, b))return lca(node.right, a, b);
+        else return node;
+    }
+
+    /**
+     * Finds whether x is a descendant of node
+     *
+     * @param node BinaryNode
+     * @param x E
+     * @return boolean if x is a child of node
+     */
+    private boolean exists(BinaryNode node, E x){
+        if (node == null) return false;
+        else if (x.compareTo((E)node.element) == 0) return true;
+        else if (x.compareTo((E)node.element) < 0) return exists(node.left, x);
+        else return exists(node.right, x);
+        //TODO Debug this exists() and lca()
     }
 
     /**
@@ -449,6 +516,14 @@ public class Tree<E extends Comparable<? super E>> {
 
         //root = balanceTree(root);
     }
+
+    /**
+     * Returns the height of node
+     *
+     * @param node BinaryNode
+     * @param depth int current depth
+     * @return Integer max depth found for the node
+     */
     private Integer getDepth(BinaryNode node, int depth) {
 
         if (node == null) return depth;
@@ -457,30 +532,47 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * In a BST, keep only nodes between range
+     *
      * @param a lowest value
      * @param b highest value
      */
-    // TODO write this function Keep Range
+    // TODO debug keepRange()
     public void keepRange(E a, E b) {
 
         keepRangeRecur(root, a, b);
     }
+
+    /**
+     * Keeps range recurse function
+     *
+     * @param node BinaryNode current node being compared to
+     * @param a E lower bound
+     * @param b E upper bound
+     */
     private void keepRangeRecur(BinaryNode node, E a, E b) {
 
         if (node == null) return;
-        if (a.compareTo((E)node.element) < 0 && b.compareTo((E)node.element) > 0) {  //node is within a-b bounds so keep it
+
+        //node is within a-b bounds so keep it
+        if (a.compareTo((E)node.element) <= 0 && b.compareTo((E)node.element) >= 0) {
             keepRangeRecur(node.left, a, b);
             keepRangeRecur(node.right, a, b);
+
+            //node is to the left of boundaries
         } else if (a.compareTo((E)node.element) > 0) {
             if (node.parent.right == node) node.parent.right = null;
-            else node.parent.left = null; // TODO could mess up a root
+            else if (node.parent == null)root = node.right;
+            else node.parent.left = node.right;
+            keepRangeRecur(node.right, a, b);
+
+            // node is to the right of boundaries
         } else if (b.compareTo((E)node.element) < 0) {
             if (node.parent.right == node) node.parent.right = null;
-            else node.parent.left = null; // TODO could mess up a root
+            else if (node.parent == null) root = node.left;
+            else node.parent.left = node.left;
+            keepRangeRecur(node.left, a, b);
         }
     }
-
-    //PRIVATE
 
     /**
      * Build a NON BST tree by preorder
