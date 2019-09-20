@@ -35,6 +35,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Create non ordered tree from list in preorder
+     *
      * @param arr    List of elements
      * @param label  Name of tree
      * @param height Maximum height of tree
@@ -46,6 +47,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Create BST
+     * O(n)
      * @param arr   List of elements to be added
      * @param label Name of tree
      */
@@ -60,6 +62,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Create BST from Array
+     * O(n)
      * @param arr   List of elements to be added
      * @param label Name of  tree
      */
@@ -73,6 +76,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Change name of tree
+     * O(1)
      * @param name new name of tree
      */
     public void changeName(String name) {
@@ -505,16 +509,87 @@ public class Tree<E extends Comparable<? super E>> {
         else if (x.compareTo((E)node.element) == 0) return true;
         else if (x.compareTo((E)node.element) < 0) return exists(node.left, x);
         else return exists(node.right, x);
-        //TODO Debug this exists() and lca()
     }
 
     /**
      * Balance the tree
      */
-    // TODO write this function Balance Tree
+    // TODO debug Balance Tree. getting null pointer in logic
     public void balanceTree() {
 
-        //root = balanceTree(root);
+        balanceTree(root);
+    }
+
+    /**
+     * Recursive function of balance tree
+     *
+     * @param node BinaryNode
+     */
+    private void balanceTree(BinaryNode node) {
+        if (node == null) return;
+
+        int leftDepth = getDepth(node.left, 0);
+        int rightDepth = getDepth(node.right, 0);
+        if (Math.abs(leftDepth - rightDepth) > 1) { // outofbalance
+            if (leftDepth > rightDepth) rotationLR(node);
+            else rotationRL(node);
+            balanceTree(root);
+        } else {
+            balanceTree(node.left);
+            balanceTree(node.right);
+        }
+    }
+
+    /**
+     * Rotates from left to right at node
+     *
+     * @param node BinaryNode
+     */
+    private void rotationLR(BinaryNode node) {
+        BinaryNode temp = node.left.right;
+        if (node == root) {
+            root = node.left;
+            root.parent = null;
+            root.right = node;
+            node.left = node.parent;
+            node.left = temp;
+        } else {
+            if (node.parent.right == node) {
+                node.parent.right = node.left;
+            } else {
+                node.parent.left = node.left;
+            }
+            node.left.right = node;
+            node.left.parent = node.parent;
+            node.parent = node.left;
+            node.left = temp;
+        }
+    }
+
+    /**
+     * rotates from right to left at node
+     *
+     * @param node BinaryNode
+     */
+    private void rotationRL(BinaryNode node) {
+        BinaryNode temp = node.right.left;
+        if (node == root) {
+            root = node.right;
+            root.parent = null;
+            root.left = node;
+            node.right = node.parent;
+            node.right = temp;
+        } else {
+            if (node.parent.right == node) {
+                node.parent.right = node.right;
+            } else {
+                node.parent.left = node.right;
+            }
+            node.right.left = node;
+            node.right.parent = node.parent;
+            node.parent = node.right;
+            node.right = temp;
+        }
     }
 
     /**
@@ -536,7 +611,6 @@ public class Tree<E extends Comparable<? super E>> {
      * @param a lowest value
      * @param b highest value
      */
-    // TODO debug keepRange()
     public void keepRange(E a, E b) {
 
         keepRangeRecur(root, a, b);
@@ -560,16 +634,32 @@ public class Tree<E extends Comparable<? super E>> {
 
             //node is to the left of boundaries
         } else if (a.compareTo((E)node.element) > 0) {
-            if (node.parent.right == node) node.parent.right = null;
-            else if (node.parent == null)root = node.right;
-            else node.parent.left = node.right;
+            if (node == root) {
+                root = node.right;
+                node.right.parent = null;
+            } else if (node.parent.right == node) { //node and its parent are out
+                root = node;
+                node.parent = null;
+                keepRangeRecur(node.left, a, b);
+            } else { //node is out but its parent is in
+                node.parent.left = node.right;
+                if (node.right != null) node.right.parent = node.parent;
+            }
             keepRangeRecur(node.right, a, b);
 
             // node is to the right of boundaries
         } else if (b.compareTo((E)node.element) < 0) {
-            if (node.parent.right == node) node.parent.right = null;
-            else if (node.parent == null) root = node.left;
-            else node.parent.left = node.left;
+            if (node == root) {
+                root = node.left;
+                node.left.parent = null;
+            } else if (node.parent.left == node) { //node and its parent are out
+                root = node;
+                node.parent = null;
+                keepRangeRecur(node.right, a, b);
+            } else { //node is out but its parent is in
+                node.parent.right = node.left;
+                if (node.left != null) node.left.parent = node.parent;
+            }
             keepRangeRecur(node.left, a, b);
         }
     }
@@ -776,23 +866,23 @@ public class Tree<E extends Comparable<? super E>> {
         treeC.buildTreeTraversals(inorder, preorder);
         treeC.changeName("Tree C built from inorder and preorder traversals");
         System.out.println(treeC.toString());
-//
-//        System.out.println(tree1.toString());
-//        System.out.println("tree1 Least Common Ancestor of (56,61) " + tree1.lca(56, 61) + ENDLINE);
-//
-//        System.out.println("tree1 Least Common Ancestor of (6,25) " + tree1.lca(6, 25) + ENDLINE);
-//        System.out.println(tree3.toString());
+
+        System.out.println(tree1.toString());
+        System.out.println("tree1 Least Common Ancestor of (56,61) " + tree1.lca(56, 61) + ENDLINE);
+
+        System.out.println("tree1 Least Common Ancestor of (6,25) " + tree1.lca(6, 25) + ENDLINE);
+        System.out.println(tree3.toString());
 //        tree3.balanceTree();
 //        tree3.changeName("tree3 after balancing");
 //        System.out.println(tree3.toString());
-//
-//        System.out.println(tree1.toString());
-//        tree1.keepRange(10, 50);
-//        tree1.changeName("tree1 after keeping only nodes between 10 and 50");
-//        System.out.println(tree1.toString());
-//        tree3.keepRange(3, 85);
-//        tree3.changeName("tree3 after keeping only nodes between 3  and 85");
-//        System.out.println(tree3.toString());
+
+        System.out.println(tree1.toString());
+        tree1.keepRange(10, 50);
+        tree1.changeName("tree1 after keeping only nodes between 10 and 50");
+        System.out.println(tree1.toString());
+        tree3.keepRange(3, 85);
+        tree3.changeName("tree3 after keeping only nodes between 3  and 85");
+        System.out.println(tree3.toString());
 
     }
 }
