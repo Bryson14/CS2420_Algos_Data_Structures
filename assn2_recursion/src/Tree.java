@@ -168,6 +168,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
     /**
      * gets the maximum value from node
+     * O(log(n))
      * @param node BinaryNode
      * @return the largest node
      */
@@ -179,6 +180,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Counts number of nodes in specified level
+     * O(log(n))
      * @param level Level in tree, root is zero
      * @return count of number of nodes at specified level
      */
@@ -203,6 +205,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Print all paths from root to leaves
+     * O(n)
      */
     public void printAllPaths() {
 
@@ -232,6 +235,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Print contents of levels in zig zag order starting at maxLevel
+     * O(log(n))
      * @param maxLevel deepest level of print desired
      */
     public void byLevelZigZag(int maxLevel) {
@@ -267,6 +271,7 @@ public class Tree<E extends Comparable<? super E>> {
     }
 
     /**
+     * O(n*log(n))
      * Counts all non-null binary search trees embedded in tree
      * @return Count of embedded binary search trees
      */
@@ -338,6 +343,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Remove all paths from tree that sum to less than given value
+     * O(n)
      * @param k: minimum path sum allowed in final tree
      */
     public void pruneK(Integer k) {
@@ -403,7 +409,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Build tree given inOrder and preOrder traversals.  Each value is unique
-     *
+     * O(n*log(n))
      * @param inOrder  List of tree nodes in inorder
      * @param preOrder List of tree nodes in preorder
      */
@@ -465,10 +471,9 @@ public class Tree<E extends Comparable<? super E>> {
         else return list.subList(idx + 1, list.size());
     }
 
-
     /**
      * Find the least common ancestor of two nodes
-     *
+     * O(log(n))
      * @param a first node
      * @param b second node
      * @return String representation of ancestor
@@ -480,7 +485,6 @@ public class Tree<E extends Comparable<? super E>> {
             if (exists(root, a)) return a.toString();
             else return b.toString();
         }
-
         BinaryNode<E> ancestor = null;
         if (a.compareTo(b) < 0) {
             ancestor = lca(root, a, b);
@@ -493,7 +497,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Recursive Least common ancestor call
-     *
+     *O(n*log(n))
      * @param node BinaryNode last known node to have both a and b as children
      * @param a E
      * @param b E
@@ -521,8 +525,8 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Balance the tree
+     * O(n*log(n))
      */
-    // TODO debug Balance Tree.
     public void balanceTree() {
 
         balanceTree(root);
@@ -705,7 +709,7 @@ public class Tree<E extends Comparable<? super E>> {
 
     /**
      * Keeps range recurse function
-     *
+     * O(n)
      * @param node BinaryNode current node being compared to
      * @param a E lower bound
      * @param b E upper bound
