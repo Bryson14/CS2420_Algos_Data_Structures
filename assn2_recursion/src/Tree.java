@@ -1,7 +1,6 @@
 // ******************ERRORS********************************
 // Throws UnderflowException as appropriate
 
-import javax.swing.plaf.basic.BasicDesktopIconUI;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -167,7 +166,16 @@ public class Tree<E extends Comparable<? super E>> {
         if (node.left != null) return min(node.left);
         else return node;
     }
-
+    /**
+     * gets the maximum value from node
+     * @param node BinaryNode
+     * @return the largest node
+     */
+    private BinaryNode max(BinaryNode node) {
+        if (node == null) return node.parent;
+        else if (node.right == null) return node;
+        else return max(node.right);
+    }
 
     /**
      * Counts number of nodes in specified level
@@ -514,7 +522,7 @@ public class Tree<E extends Comparable<? super E>> {
     /**
      * Balance the tree
      */
-    // TODO debug Balance Tree. getting null pointer in logic
+    // TODO debug Balance Tree.
     public void balanceTree() {
 
         balanceTree(root);
@@ -531,8 +539,15 @@ public class Tree<E extends Comparable<? super E>> {
         int leftDepth = getDepth(node.left, 0);
         int rightDepth = getDepth(node.right, 0);
         if (Math.abs(leftDepth - rightDepth) > 1) { // outofbalance
-            if (leftDepth > rightDepth) rotationLR(node);
-            else rotationRL(node);
+            if (leftDepth > rightDepth) {
+                if (node.left.right != null) doubleRotationLR(node);
+                else singleRotationLR(node);
+            }
+
+            else {
+                if (node.right.left != null) doubleRotationRL(node);
+                else singleRotationRL(node);
+            }
             balanceTree(root);
         } else {
             balanceTree(node.left);
@@ -545,24 +560,36 @@ public class Tree<E extends Comparable<? super E>> {
      *
      * @param node BinaryNode
      */
-    private void rotationLR(BinaryNode node) {
-        BinaryNode temp = node.left.right;
+    private void doubleRotationLR(BinaryNode node) {
+        BinaryNode temp = max(node.left);
         if (node == root) {
-            root = node.left;
+            root = temp;
+            if (temp.parent.right == temp) { //temp could have a child on the left
+                temp.parent.right = temp.left;
+                if (temp.left != null) temp.left.parent = temp.parent;
+            }
+            else {
+                temp.parent.left = temp.left;
+                if (temp.left != null) temp.left.parent = temp.parent;
+            }
             root.parent = null;
             root.right = node;
-            node.left = node.parent;
-            node.left = temp;
+            root.left = node.left;
+            if(node.left != null) node.left.parent = root;
+            node.parent = root;
+            node.left = null;
         } else {
             if (node.parent.right == node) {
-                node.parent.right = node.left;
+                node.parent.right = temp;
             } else {
-                node.parent.left = node.left;
+                node.parent.left = temp;
             }
-            node.left.right = node;
-            node.left.parent = node.parent;
-            node.parent = node.left;
-            node.left = temp;
+            temp.parent = node.parent;
+            temp.left = node.left;
+            if(node.left != null) node.left.parent = temp;
+            temp.right = node;
+            node.parent = temp;
+            node.left = null;
         }
     }
 
@@ -571,24 +598,84 @@ public class Tree<E extends Comparable<? super E>> {
      *
      * @param node BinaryNode
      */
-    private void rotationRL(BinaryNode node) {
-        BinaryNode temp = node.right.left;
+    private void doubleRotationRL(BinaryNode node) {
+        BinaryNode temp = min(node.right);
+        if (node == root) {
+            root = temp;
+            if (temp.parent.right == temp) { //temp could have a child on the right
+                temp.parent.right = temp.right;
+                if (temp.right != null) temp.right.parent = temp.parent;
+            }
+            else {
+                temp.parent.left = temp.right;
+                if (temp.right != null) temp.right.parent = temp.parent;
+            }
+            root.parent = null;
+            root.left = node;
+            root.right = node.right;
+            if(node.right != null) node.right.parent = root;
+            node.parent = root;
+            node.right = null;
+        } else {
+            if (node.parent.right == node) {
+                node.parent.right = temp;
+            } else {
+                node.parent.left = temp;
+            }
+            temp.parent = node.parent;
+            temp.right = node.right;
+            if(node.right != null) node.right.parent = temp;
+            temp.left = node;
+            node.parent = temp;
+            node.right = null;
+        }
+    }
+
+    /**
+     * Single rotation from left to right
+     * @param node BinaryNode
+     */
+    private void singleRotationLR(BinaryNode node){
+        if (node == root) {
+            root = node.left;
+            root.parent = null;
+            root.right = node;
+            node.parent = node.left;
+            node.left = null;
+        } else {
+            if (node.parent.right == node) {
+                node.parent.right = node.left;
+            } else {
+                node.parent.left = node.left;
+            }
+            node.left.parent = node.parent;
+            node.left.right = node;
+            node.parent = node.left;
+            node.left = null;
+        }
+    }
+
+    /**
+     * single rotation from right to left
+     * @param node BinaryNode
+     */
+    private void singleRotationRL(BinaryNode node) {
         if (node == root) {
             root = node.right;
             root.parent = null;
             root.left = node;
-            node.right = node.parent;
-            node.right = temp;
+            node.parent = node.right;
+            node.right = null;
         } else {
             if (node.parent.right == node) {
                 node.parent.right = node.right;
             } else {
                 node.parent.left = node.right;
             }
-            node.right.left = node;
             node.right.parent = node.parent;
+            node.right.left = node;
             node.parent = node.right;
-            node.right = temp;
+            node.right = null;
         }
     }
 
@@ -643,7 +730,7 @@ public class Tree<E extends Comparable<? super E>> {
                 keepRangeRecur(node.left, a, b);
             } else { //node is out but its parent is in
                 node.parent.left = node.right;
-                if (node.right != null) node.right.parent = node.parent;
+                if (node.right != null) node.right.parent = node.parent; // checking if child exists
             }
             keepRangeRecur(node.right, a, b);
 
@@ -658,7 +745,7 @@ public class Tree<E extends Comparable<? super E>> {
                 keepRangeRecur(node.right, a, b);
             } else { //node is out but its parent is in
                 node.parent.right = node.left;
-                if (node.left != null) node.left.parent = node.parent;
+                if (node.left != null) node.left.parent = node.parent; // checking if child exists
             }
             keepRangeRecur(node.left, a, b);
         }
@@ -872,9 +959,9 @@ public class Tree<E extends Comparable<? super E>> {
 
         System.out.println("tree1 Least Common Ancestor of (6,25) " + tree1.lca(6, 25) + ENDLINE);
         System.out.println(tree3.toString());
-//        tree3.balanceTree();
-//        tree3.changeName("tree3 after balancing");
-//        System.out.println(tree3.toString());
+        tree3.balanceTree();
+        tree3.changeName("tree3 after balancing");
+        System.out.println(tree3.toString());
 
         System.out.println(tree1.toString());
         tree1.keepRange(10, 50);
