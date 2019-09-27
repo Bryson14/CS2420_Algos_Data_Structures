@@ -1,3 +1,5 @@
+package Assn3_Parking_Lot_Revisited;
+
 // AvlTree class
 //
 // CONSTRUCTION: with no initializer
