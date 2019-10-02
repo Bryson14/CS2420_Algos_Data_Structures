@@ -228,7 +228,9 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
     }
 
     private AvlNode<AnyType> deleteMin( AvlNode<AnyType> avlNode ) {
-        if (avlNode == null) return avlNode.parent;
+//        if (avlNode == null) return avlNode.parent;
+//        else return avlNode.left;
+        return avlNode;
     }
 
     /**
