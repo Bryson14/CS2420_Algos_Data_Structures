@@ -222,6 +222,10 @@ public class Puzzle {
         return initNode;
     }
 
+    /**
+     * Solves the puzzle and saves the intermediate states
+     * @param doPrint boolean whether puzzle should print out step by step solution
+     */
     public void solve(boolean doPrint) {
         if (doPrint){
             System.out.println("========================");
@@ -230,48 +234,49 @@ public class Puzzle {
 
         Object[] solution = null;
 
-        // makes the necessary linked list
         ArrayList<Node> foundNodes = new ArrayList<>();
         foundNodes.add(getInitNode());
 
-        solution = solveRecur(foundNodes);
+        Set<Integer> foundHashCodes = new HashSet<>();
+        foundHashCodes.add(getInitNode().hashCode());
+
+        solution = solveRecur(foundNodes, foundHashCodes);
 
         System.out.print("\n\nSOLUTION of Depth " + ((Node)solution[0]).getDepth() + ".");
         System.out.println(" Total Nodes Expanded : " + solution[1] + "\n");
         if (doPrint){
             printSolution((Node)solution[0]);
         }
-
     }
-    //    Returns the solution node
-    private Object[] solveRecur(ArrayList<Node> foundNodes) {
 
-        // get every possibility from the current found nodes
-        ArrayList<Node> temp = new ArrayList<>() ;
-        for (Node node : foundNodes) {
+    /**
+     * Recursive call for the solve function
+     * @param foundNodes List of unique nodes variation states
+     * @return Object list containing the solution Node and number of total states found
+     */
+    private Object[] solveRecur(ArrayList<Node> foundNodes, Set<Integer> foundHashCodes) {
 
+        /*
+        finds all the possible movement for every node in foundNodes
+        adds unique new nodes to foundNodes
+         */
+
+        for (int i = 0; i < foundNodes.size(); i++) {
+            Node node = foundNodes.get(i);
             for (Node newnode: node.expand()) {
                 if (newnode.isGoal()) {
                     Object[] solution = {newnode, foundNodes.size()};
                     return solution;
                 }
-                temp.add(newnode);
-            }
-        }
-
-        // if new nodes aren't equal to found nodes, they are added to the list
-        for (Node unchecked: temp) {
-            boolean same = false;
-            for (Node node: foundNodes) {
-                if (unchecked.equals(node)) {
-                    same = true;
+                if (foundHashCodes.contains(newnode.hashCode())){
+                    //skip
+                } else {
+                    foundHashCodes.add(newnode.hashCode());
+                    foundNodes.add(newnode);
                 }
             }
-            if (!same) {
-                foundNodes.add(unchecked);
-            }
         }
-        return solveRecur(foundNodes);
+        return solveRecur(foundNodes, foundHashCodes);
     }
 
     /**
