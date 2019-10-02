@@ -1,19 +1,19 @@
 package Assn3_Parking_Lot_Revisited;
 
 public class Dwarf implements Comparable<Dwarf>{
-    String data;
-    int which;
-    static  int ct = 0;
+    private String data;
+    private int id;
+    static  int count = 0;
     public Dwarf(String x){
         data = x;
-        which= ct++;
+        id = count++;
     }
     @Override
     public int compareTo(Dwarf b2){
         return (this.data.compareTo( b2.data));
     }
     public String toString(){
-        return  data + which;
+        return  data + id;
     }
 }
 
