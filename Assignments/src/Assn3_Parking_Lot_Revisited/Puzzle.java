@@ -223,20 +223,24 @@ public class Puzzle {
     }
 
     public void solve(boolean doPrint) {
-        System.out.println("========================");
-        System.out.println(initNode.toString());
+        if (doPrint){
+            System.out.println("========================");
+            System.out.println(initNode.toString());
+        }
 
         Object[] solution = null;
 
         // makes the necessary linked list
         ArrayList<Node> foundNodes = new ArrayList<>();
-        foundNodes.add(initNode);
+        foundNodes.add(getInitNode());
 
         solution = solveRecur(foundNodes);
 
         System.out.print("\n\nSOLUTION of Depth " + ((Node)solution[0]).getDepth() + ".");
         System.out.println(" Total Nodes Expanded : " + solution[1] + "\n");
-        printSolution((Node)solution[0]);
+        if (doPrint){
+            printSolution((Node)solution[0]);
+        }
 
     }
     //    Returns the solution node
@@ -258,8 +262,7 @@ public class Puzzle {
         // if new nodes aren't equal to found nodes, they are added to the list
         for (Node unchecked: temp) {
             boolean same = false;
-            for (int i = 0; i < foundNodes.size(); i++) {
-                Node node = foundNodes.get(1);
+            for (Node node: foundNodes) {
                 if (unchecked.equals(node)) {
                     same = true;
                 }
