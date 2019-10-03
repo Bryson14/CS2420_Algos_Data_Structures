@@ -226,21 +226,25 @@ public class Puzzle {
      * Solves the puzzle and saves the intermediate states
      * @param doPrint boolean whether puzzle should print out step by step solution
      */
-    public void solve(boolean doPrint) {
+    public void solve(boolean doPrint, boolean freakishlyFast) {
         if (doPrint){
             System.out.println("========================");
             System.out.println(initNode.toString());
         }
-
-        Object[] solution = null;
-
+        Object[] solution;
         ArrayList<Node> foundNodes = new ArrayList<>();
         foundNodes.add(getInitNode());
 
-        Set<Integer> foundHashCodes = new HashSet<>();
-        foundHashCodes.add(getInitNode().hashCode());
+        if (freakishlyFast) { //solved using sets
 
-        solution = solveRecur(foundNodes, foundHashCodes);
+            Set<Integer> foundHashCodes = new HashSet<>();
+            foundHashCodes.add(getInitNode().hashCode());
+
+            solution = solveRecurFast(foundNodes, foundHashCodes);
+
+        }else { // solved with AVL trees
+            solution = solveRecurAVL(foundNodes);
+        }
 
         System.out.print("\n\nSOLUTION of Depth " + ((Node)solution[0]).getDepth() + ".");
         System.out.println(" Total Nodes Expanded : " + solution[1] + "\n");
@@ -250,11 +254,11 @@ public class Puzzle {
     }
 
     /**
-     * Recursive call for the solve function
+     * Recursive call to solve function slow the way for class with AVL trees haha
      * @param foundNodes List of unique nodes variation states
      * @return Object list containing the solution Node and number of total states found
      */
-    private Object[] solveRecur(ArrayList<Node> foundNodes, Set<Integer> foundHashCodes) {
+    private Object[] solveRecurAVL(ArrayList<Node> foundNodes){
 
         /*
         finds all the possible movement for every node in foundNodes
@@ -276,7 +280,38 @@ public class Puzzle {
                 }
             }
         }
-        return solveRecur(foundNodes, foundHashCodes);
+        return solveRecurAVL(foundNodes);
+    }
+
+
+    /**
+     * Recursive call for the solve function fast. less that 3 seconds
+     * @param foundNodes List of unique nodes variation states
+     * @return Object list containing the solution Node and number of total states found
+     */
+    private Object[] solveRecurFast(ArrayList<Node> foundNodes, Set<Integer> foundHashCodes) {
+
+        /*
+        finds all the possible movement for every node in foundNodes
+        adds unique new nodes to foundNodes
+         */
+
+        for (int i = 0; i < foundNodes.size(); i++) {
+            Node node = foundNodes.get(i);
+            for (Node newnode: node.expand()) {
+                if (newnode.isGoal()) {
+                    Object[] solution = {newnode, foundNodes.size()};
+                    return solution;
+                }
+                if (foundHashCodes.contains(newnode.hashCode())){
+                    //skip
+                } else {
+                    foundHashCodes.add(newnode.hashCode());
+                    foundNodes.add(newnode);
+                }
+            }
+        }
+        return solveRecurFast(foundNodes, foundHashCodes);
     }
 
     /**
