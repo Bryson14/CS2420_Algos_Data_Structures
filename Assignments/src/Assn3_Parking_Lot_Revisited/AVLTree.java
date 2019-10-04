@@ -227,10 +227,32 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
         return avlNode;
     }
 
+    /**
+     * find the parent of desired node for deletion puposes
+     * @currNode current node in the search
+     * @param child the node to find the parent from
+     * @return parent node of child
+     */
+    private AvlNode<AnyType> findParent(AvlNode<AnyType> child, AvlNode<AnyType> currNode) {
+        if (child == null) return child; //child is null
+        else if (currNode == null) return currNode; // no child found
+        if (currNode.left == child || currNode.right == child) return currNode; //parent found
+        else {
+            currNode = (findParent(child, currNode.left) == null)? findParent(child, currNode.right) : findParent(child ,currNode.left);
+            return currNode;
+        }
+    }
+
+    /**
+     * deletes the smallest node. If duplicates of the min exist, those will be deleted too.
+     * @param avlNode
+     * @return
+     */
     private AvlNode<AnyType> deleteMin( AvlNode<AnyType> avlNode ) {
-//        if (avlNode == null) return avlNode.parent;
-//        else return avlNode.left;
-        return avlNode;
+        AvlNode<AnyType> min = findMin(avlNode);
+        AvlNode<AnyType> parent = findParent(min, root);
+        parent.left = min.right;
+        return balance( avlNode );
     }
 
     /**
@@ -368,7 +390,6 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
         AvlNode<AnyType>  left;         // Left child
         AvlNode<AnyType>  right;        // Right child
         int               height;       // Height
-        AvlNode<AnyType>  parent;       //parent node
     }
 
     /** The tree root. */
@@ -394,5 +415,4 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
             tree2.printTree( "\n\n The Tree after deleteMin" );
         }
     }
-
 }

@@ -265,21 +265,21 @@ public class Puzzle {
         adds unique new nodes to foundNodes
          */
 
-        for (int i = 0; i < foundNodes.size(); i++) {
-            Node node = foundNodes.get(i);
-            for (Node newnode: node.expand()) {
-                if (newnode.isGoal()) {
-                    Object[] solution = {newnode, foundNodes.size()};
-                    return solution;
-                }
-                if (foundHashCodes.contains(newnode.hashCode())){
-                    //skip
-                } else {
-                    foundHashCodes.add(newnode.hashCode());
-                    foundNodes.add(newnode);
-                }
-            }
-        }
+//        for (int i = 0; i < foundNodes.size(); i++) {
+//            Node node = foundNodes.get(i);
+//            for (Node newnode: node.expand()) {
+//                if (newnode.isGoal()) {
+//                    Object[] solution = {newnode, foundNodes.size()};
+//                    return solution;
+//                }
+//                if (foundHashCodes.contains(newnode.hashCode())){
+//                    //skip
+//                } else {
+//                    foundHashCodes.add(newnode.hashCode());
+//                    foundNodes.add(newnode);
+//                }
+//            }
+//        }
         return solveRecurAVL(foundNodes);
     }
 
