@@ -22,7 +22,7 @@ package Assn3_Parking_Lot_Revisited;
  * Note that all "matching" is based on the compareTo method.
  * @author Mark Allen Weiss
  */
-public class AVLTree<AnyType extends Comparable<? super AnyType>>
+public class AVLTree<E extends Comparable<? super E>>
 {
     /**
      * Construct the tree.
@@ -36,7 +36,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * Insert into the tree; duplicates are ignored.
      * @param item the item to insert.
      */
-    public void insert( AnyType item )
+    public void insert( E item )
     {
         root = insert( item, root );
     }
@@ -45,7 +45,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * Remove from the tree. Nothing is done if x is not found.
      * @param item the item to remove.
      */
-    public void remove( AnyType item )
+    public void remove( E item )
     {
         root = remove( item, root );
     }
@@ -57,7 +57,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private AvlNode<AnyType> remove( AnyType item, AvlNode<AnyType> avlNode )
+    private AvlNode<E> remove(E item, AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return avlNode;   // Item not found; do nothing
@@ -82,7 +82,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * Find the smallest item in the tree.
      * @return smallest item or null if empty.
      */
-    public AnyType findMin( )
+    public E findMin( )
     {
         if( isEmpty( ) )
             throw new RuntimeException( );
@@ -94,7 +94,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * Find the largest item in the tree.
      * @return the largest item of null if empty.
      */
-    public AnyType findMax( )
+    public E findMax( )
     {
         if( isEmpty( ) )
             throw new RuntimeException( );
@@ -106,7 +106,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param item the item to search for.
      * @return true if x is found.
      */
-    public boolean contains( AnyType item )
+    public boolean contains( E item )
     {
         return contains( item, root );
     }
@@ -143,7 +143,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
     private static final int ALLOWED_IMBALANCE = 1;
 
     // Assume t is either balanced or within one of being balanced
-    private AvlNode<AnyType> balance( AvlNode<AnyType> avlNode )
+    private AvlNode<E> balance(AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return avlNode;
@@ -169,7 +169,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
         checkBalance( root );
     }
 
-    private int checkBalance( AvlNode<AnyType> avlNode )
+    private int checkBalance( AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return -1;
@@ -193,7 +193,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private AvlNode<AnyType> insert( AnyType item, AvlNode<AnyType> avlNode )
+    private AvlNode<E> insert(E item, AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return new AvlNode<>( item, null, null ,null);
@@ -213,7 +213,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode the node that roots the tree.
      * @return node containing the smallest item.
      */
-    private AvlNode<AnyType> findMin( AvlNode<AnyType> avlNode )
+    private AvlNode<E> findMin(AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return avlNode;
@@ -229,7 +229,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param child the node to find the parent from
      * @return parent node of child
      */
-    private AvlNode<AnyType> findParent(AvlNode<AnyType> child, AvlNode<AnyType> currNode) {
+    private AvlNode<E> findParent(AvlNode<E> child, AvlNode<E> currNode) {
         if (child == null) return child; //child is null
         else if (currNode == null) return currNode; // no child found
         if (currNode.left == child || currNode.right == child) return currNode; //parent found
@@ -242,10 +242,11 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
     /**
      * helper function for deleteMin recursion call
      */
-    public  void  deleteMin( ){
+    public  E  deleteMin( ){
 
-        AvlNode<AnyType> min = findMin(root);
+        AvlNode<E> min = findMin(root);
         root =  deleteMin(root, min);
+        return min.element;
     }
 
     /**
@@ -253,7 +254,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode
      * @return
      */
-    private AvlNode<AnyType> deleteMin( AvlNode<AnyType> avlNode , AvlNode<AnyType> min) {
+    private AvlNode<E> deleteMin(AvlNode<E> avlNode , AvlNode<E> min) {
         if (avlNode == null) return null;
         if (avlNode.left == min) {
             avlNode.left = min.right;
@@ -269,7 +270,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode the node that roots the tree.
      * @return node containing the largest item.
      */
-    private AvlNode<AnyType> findMax( AvlNode<AnyType> avlNode )
+    private AvlNode<E> findMax(AvlNode<E> avlNode )
     {
         if( avlNode == null )
             return avlNode;
@@ -285,7 +286,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * @param avlNode the node that roots the tree.
      * @return true if x is found in subtree.
      */
-    private boolean contains( AnyType item, AvlNode<AnyType> avlNode )
+    private boolean contains(E item, AvlNode<E> avlNode )
     {
         while( avlNode != null )
         {
@@ -306,7 +307,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * Internal method to print a subtree in sorted order.
      * @param avlNode the node that roots the tree.
      */
-    private void printTree( AvlNode<AnyType> avlNode, String indent )
+    private void printTree(AvlNode<E> avlNode, String indent )
     {
         if( avlNode != null )
         {
@@ -319,7 +320,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
     /**
      * Return the height of node t, or -1, if null.
      */
-    private int height( AvlNode<AnyType> avlNode )
+    private int height( AvlNode<E> avlNode )
     {   if (avlNode==null) return -1;
         return avlNode.height;
     }
@@ -329,9 +330,9 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * For AVL trees, this is a single rotation for case 1.
      * Update heights, then return new root.
      */
-    private AvlNode<AnyType> rightRotation(AvlNode<AnyType> avlNode )
+    private AvlNode<E> rightRotation(AvlNode<E> avlNode )
     {
-        AvlNode<AnyType> theLeft = avlNode.left;
+        AvlNode<E> theLeft = avlNode.left;
         avlNode.left = theLeft.right;
         theLeft.right = avlNode;
         avlNode.height = Math.max( height( avlNode.left ), height( avlNode.right ) ) + 1;
@@ -344,9 +345,9 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * For AVL trees, this is a single rotation for case 4.
      * Update heights, then return new root.
      */
-    private AvlNode<AnyType> leftRotation(AvlNode<AnyType> avlNode )
+    private AvlNode<E> leftRotation(AvlNode<E> avlNode )
     {
-        AvlNode<AnyType> theRight = avlNode.right;
+        AvlNode<E> theRight = avlNode.right;
         avlNode.right = theRight.left;
         theRight.left = avlNode;
         avlNode.height = Math.max( height( avlNode.left ), height( avlNode.right ) ) + 1;
@@ -360,7 +361,7 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * For AVL trees, this is a double rotation for case 2.
      * Update heights, then return new root.
      */
-    private AvlNode<AnyType> doubleRightRotation( AvlNode<AnyType> avlNode )
+    private AvlNode<E> doubleRightRotation(AvlNode<E> avlNode )
     {
         avlNode.left = leftRotation( avlNode.left );
         return rightRotation( avlNode );
@@ -373,21 +374,21 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
      * For AVL trees, this is a double rotation for case 3.
      * Update heights, then return new root.
      */
-    private AvlNode<AnyType> doubleLeftRotation(AvlNode<AnyType> avlNode )
+    private AvlNode<E> doubleLeftRotation(AvlNode<E> avlNode )
     {
         avlNode.right = rightRotation( avlNode.right );
         return leftRotation( avlNode );
     }
 
-    private static class AvlNode<AnyType>
+    private static class AvlNode<E>
     {
         // Constructors
-        AvlNode( AnyType theElement )
+        AvlNode( E theElement )
         {
             this( theElement, null, null , null);
         }
 
-        AvlNode( AnyType theElement, AvlNode<AnyType> left, AvlNode<AnyType> right , AvlNode<AnyType> parent)
+        AvlNode( E theElement, AvlNode<E> left, AvlNode<E> right , AvlNode<E> parent)
         {
             element  = theElement;
             this.left = left;
@@ -395,14 +396,14 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
             height   = 0;
         }
 
-        AnyType           element;      // The data in the node
-        AvlNode<AnyType>  left;         // Left child
-        AvlNode<AnyType>  right;        // Right child
+        E           element;      // The data in the node
+        AvlNode<E>  left;         // Left child
+        AvlNode<E>  right;        // Right child
         int               height;       // Height
     }
 
     /** The tree root. */
-    private AvlNode<AnyType> root;
+    private AvlNode<E> root;
 
 
     // Test program

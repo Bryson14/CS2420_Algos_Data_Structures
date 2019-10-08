@@ -232,18 +232,24 @@ public class Puzzle {
             System.out.println(initNode.toString());
         }
         Object[] solution;
-        ArrayList<Node> foundNodes = new ArrayList<>();
-        foundNodes.add(getInitNode());
+
+
+        Set<Integer> foundHashCodes = new HashSet<>();
+        foundHashCodes.add(getInitNode().hashCode());
 
         if (freakishlyFast) { //solved using sets
 
-            Set<Integer> foundHashCodes = new HashSet<>();
-            foundHashCodes.add(getInitNode().hashCode());
+            ArrayList<Node> foundNodes = new ArrayList<>();
+            foundNodes.add(getInitNode());
 
             solution = solveRecurFast(foundNodes, foundHashCodes);
 
         }else { // solved with AVL trees
-            solution = solveRecurAVL(foundNodes);
+
+            AVLTree<Node> foundNodes = new AVLTree();
+            foundNodes.insert(getInitNode());
+
+            solution = solveAVL(foundNodes, foundHashCodes);
         }
 
         System.out.print("\n\nSOLUTION of Depth " + ((Node)solution[0]).getDepth() + ".");
@@ -258,29 +264,25 @@ public class Puzzle {
      * @param foundNodes List of unique nodes variation states
      * @return Object list containing the solution Node and number of total states found
      */
-    private Object[] solveRecurAVL(ArrayList<Node> foundNodes){
+    private Object[] solveAVL(AVLTree <Node> foundNodes, Set<Integer> foundHashCodes) {
 
-        /*
-        finds all the possible movement for every node in foundNodes
-        adds unique new nodes to foundNodes
-         */
+        int numOfNodes = 1;
 
-//        for (int i = 0; i < foundNodes.size(); i++) {
-//            Node node = foundNodes.get(i);
-//            for (Node newnode: node.expand()) {
-//                if (newnode.isGoal()) {
-//                    Object[] solution = {newnode, foundNodes.size()};
-//                    return solution;
-//                }
-//                if (foundHashCodes.contains(newnode.hashCode())){
-//                    //skip
-//                } else {
-//                    foundHashCodes.add(newnode.hashCode());
-//                    foundNodes.add(newnode);
-//                }
-//            }
-//        }
-        return solveRecurAVL(foundNodes);
+        while (!foundNodes.isEmpty()) {
+            Node nodeToExpand = foundNodes.deleteMin();
+            numOfNodes++;
+            for (Node newnode : nodeToExpand.expand()) {
+                if (newnode.isGoal()) {
+                    Object[] solution = {newnode, numOfNodes};
+                    return solution;
+                }
+                if (!foundHashCodes.contains(newnode.hashCode())){
+                    foundHashCodes.add(newnode.hashCode());
+                    foundNodes.insert(newnode);
+                }
+            }
+        }
+        return null;
     }
 
 
