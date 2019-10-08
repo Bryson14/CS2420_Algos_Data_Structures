@@ -1,7 +1,7 @@
 package Assn3_Parking_Lot_Revisited;
 import java.util.*;
 
-public class Node implements Comparable{
+public class Node implements Comparable<Node>{
 
     private String history;  //Sequence of moves to get to this state
     private Node parent;     //Node from which this node was expanded
@@ -13,7 +13,7 @@ public class Node implements Comparable{
     private int hashcode;    // state of grid in coded form (for easy comparison)
     private Node next;
     private int remainingWork; // based off how many spaces are left between the goal car and the goal
-    private int priority;
+    private int priority;     // high priority means it might be closer to being done
 
     final int GOAL_CAR = 0;
     /**
@@ -34,7 +34,6 @@ public class Node implements Comparable{
         this.depth = depth;
         getGrid();
         computeHashCode();
-        getRemainingWork();
         calculatePriority();
         next = null;
     }
@@ -221,15 +220,17 @@ public class Node implements Comparable{
     }
 
     private int getRemainingWork() {
-        return 0;
+        for (int i = grid.length - 1; i >= 0; i--) {
+            if (grid[i][2] == 0) return i;
+        } return 0;
     }
-    private int calculatePriority() {
-        return 0;
+    private void calculatePriority() {
+        priority =  getRemainingWork() + depth * 2;
     }
 
     @Override
-    public int compareTo(Object o) {
-        if (this.priority < ((Node)o).getPriority()) return -1;
+    public int compareTo(Node o) { // a high priority return less than a low priority node
+        if (this.priority > ((Node)o).getPriority()) return -1;
         else if (this.priority == ((Node)o).getPriority()) return 0;
         else return 1;
     }

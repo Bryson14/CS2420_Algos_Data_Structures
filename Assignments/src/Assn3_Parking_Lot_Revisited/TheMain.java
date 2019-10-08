@@ -14,9 +14,9 @@ public class TheMain {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         System.out.println(System.getProperty("user.dir"));
-        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("src\\Assn3_Parking_Lot_Revisited\\jamsAll.txt");
+        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("Assignments\\src\\Assn3_Parking_Lot_Revisited\\jamsAll.txt");
 //        int num_puzzles = puzzles.length;
-        int num_puzzles = 7;
+        int num_puzzles = 9;
 
         boolean doPrint = true;
         boolean freakishlyFast = false;

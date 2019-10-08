@@ -270,8 +270,8 @@ public class Puzzle {
 
         while (!foundNodes.isEmpty()) {
             Node nodeToExpand = foundNodes.deleteMin();
-            numOfNodes++;
             for (Node newnode : nodeToExpand.expand()) {
+                numOfNodes++;
                 if (newnode.isGoal()) {
                     Object[] solution = {newnode, numOfNodes};
                     return solution;
