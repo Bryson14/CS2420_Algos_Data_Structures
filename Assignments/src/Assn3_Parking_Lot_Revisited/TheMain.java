@@ -18,9 +18,9 @@ public class TheMain {
 //        int num_puzzles = puzzles.length;
         int num_puzzles = 7;
 
-        long startTime = System.currentTimeMillis();
         boolean doPrint = true;
         boolean freakishlyFast = false;
+        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < num_puzzles; i++) {
             puzzles[i].solve(doPrint, freakishlyFast);

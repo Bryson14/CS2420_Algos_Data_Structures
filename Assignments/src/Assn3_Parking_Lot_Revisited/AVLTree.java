@@ -89,10 +89,6 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
         return findMin( root ).element;
     }
 
-    public  void  deleteMin( ){
-
-        root =  deleteMin(root);
-    }
 
     /**
      * Find the largest item in the tree.
@@ -244,15 +240,28 @@ public class AVLTree<AnyType extends Comparable<? super AnyType>>
     }
 
     /**
+     * helper function for deleteMin recursion call
+     */
+    public  void  deleteMin( ){
+
+        AvlNode<AnyType> min = findMin(root);
+        root =  deleteMin(root, min);
+    }
+
+    /**
      * deletes the smallest node. If duplicates of the min exist, those will be deleted too.
      * @param avlNode
      * @return
      */
-    private AvlNode<AnyType> deleteMin( AvlNode<AnyType> avlNode ) {
-        AvlNode<AnyType> min = findMin(avlNode);
-        AvlNode<AnyType> parent = findParent(min, root);
-        parent.left = min.right;
-        return balance( avlNode );
+    private AvlNode<AnyType> deleteMin( AvlNode<AnyType> avlNode , AvlNode<AnyType> min) {
+        if (avlNode == null) return null;
+        if (avlNode.left == min) {
+            avlNode.left = min.right;
+            return balance(avlNode);
+        } else {
+            deleteMin(avlNode.left, min);
+            return balance(avlNode);
+        }
     }
 
     /**
