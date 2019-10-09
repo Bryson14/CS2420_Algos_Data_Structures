@@ -276,12 +276,12 @@ public class Puzzle {
                     Object[] solution = {newnode, numOfNodes};
                     return solution;
                 }
-                if (!foundHashCodes.contains(newnode.hashCode())){
+                else if (!foundHashCodes.contains(newnode.hashCode())){
                     foundHashCodes.add(newnode.hashCode());
                     foundNodes.insert(newnode);
                 }
             }
-        }
+        } foundNodes.printTree("tree");
         return null;
     }
 

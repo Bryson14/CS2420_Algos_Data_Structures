@@ -34,6 +34,7 @@ public class Node implements Comparable<Node>{
         this.depth = depth;
         getGrid();
         computeHashCode();
+        getRemainingWork();
         calculatePriority();
         next = null;
     }
@@ -221,11 +222,11 @@ public class Node implements Comparable<Node>{
 
     private int getRemainingWork() {
         for (int i = grid.length - 1; i >= 0; i--) {
-            if (grid[i][2] == 0) return i;
+            if (grid[i][2] == 0) this.remainingWork = i;
         } return 0;
     }
     private void calculatePriority() {
-        priority =  getRemainingWork() + depth * 2;
+        priority =  remainingWork + depth * 2;
     }
 
     @Override
