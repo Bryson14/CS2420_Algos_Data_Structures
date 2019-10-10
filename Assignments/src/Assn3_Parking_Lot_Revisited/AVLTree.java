@@ -78,6 +78,11 @@ public class AVLTree<E extends Comparable<? super E>>
         return balance( avlNode );
     }
 
+    /**
+     * returns a node in the tree with a matching hashcode. Specific to Node/Car Jam problem
+     * @param hashCode
+     * @return
+     */
     public Node getMatchingHashCode(int hashCode) {
 
         return getMatchingHashCode(hashCode, root);

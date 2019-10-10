@@ -294,7 +294,6 @@ public class Puzzle {
         return null;
     }
 
-
     /**
      * Recursive call for the solve function fast. less that 3 seconds
      * @param foundNodes List of unique nodes variation states
