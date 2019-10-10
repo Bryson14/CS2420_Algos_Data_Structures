@@ -276,7 +276,7 @@ public class Puzzle {
                     Object[] solution = {newnode, numOfNodes};
                     return solution;
                 }
-                else if (!foundHashCodes.contains(newnode.hashCode())){
+                else if (foundHashCodes.contains(newnode.hashCode())){
                     foundHashCodes.add(newnode.hashCode());
                     foundNodes.insert(newnode);
                 }
