@@ -78,6 +78,22 @@ public class AVLTree<E extends Comparable<? super E>>
         return balance( avlNode );
     }
 
+    public Node getMatchingHashCode(int hashCode) {
+
+        return getMatchingHashCode(hashCode, root);
+    }
+
+    public Node getMatchingHashCode(int hashCode, AvlNode<E> avlNode) {
+        if (avlNode == null) return null;
+        if (((Node)avlNode.element).hashCode() == hashCode) return (Node)avlNode.element;
+        else{
+            Node right = getMatchingHashCode(hashCode, avlNode.right);
+            Node left = getMatchingHashCode(hashCode, avlNode.left);
+            if (right == null) return left;
+            else return right;
+        }
+    }
+
     /**
      * Find the smallest item in the tree.
      * @return smallest item or null if empty.

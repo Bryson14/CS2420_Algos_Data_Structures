@@ -16,14 +16,15 @@ public class TheMain {
         System.out.println(System.getProperty("user.dir"));
         Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("Assignments\\src\\Assn3_Parking_Lot_Revisited\\jamsAll.txt");
         int num_puzzles = puzzles.length;
+
 //        int num_puzzles = 41;
 
         boolean doPrint = true;
-        boolean freakishlyFast = true;
+        boolean dontRunAVLTreeSolve = true;
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < num_puzzles; i++) {
-            puzzles[i].solve(doPrint, freakishlyFast);
+            puzzles[i].solve(doPrint, dontRunAVLTreeSolve);
             System.out.println("solved Problem" + i);
         }
         System.out.printf("\n%.3f seconds to solve %d Problems", (double)(System.currentTimeMillis() - startTime)/1000, num_puzzles);

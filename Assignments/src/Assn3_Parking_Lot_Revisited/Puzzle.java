@@ -226,7 +226,7 @@ public class Puzzle {
      * Solves the puzzle and saves the intermediate states
      * @param doPrint boolean whether puzzle should print out step by step solution
      */
-    public void solve(boolean doPrint, boolean freakishlyFast) {
+    public void solve(boolean doPrint, boolean dontRunAVLTreeSolve) {
         if (doPrint){
             System.out.println("========================");
             System.out.println(initNode.toString());
@@ -237,7 +237,7 @@ public class Puzzle {
         Set<Integer> foundHashCodes = new HashSet<>();
         foundHashCodes.add(getInitNode().hashCode());
 
-        if (freakishlyFast) { //solved using sets
+        if (dontRunAVLTreeSolve) { //solved using sets and arraylists
 
             ArrayList<Node> foundNodes = new ArrayList<>();
             foundNodes.add(getInitNode());
@@ -276,9 +276,18 @@ public class Puzzle {
                     Object[] solution = {newnode, numOfNodes};
                     return solution;
                 }
-                else if (foundHashCodes.contains(newnode.hashCode())){
+                else if (!foundHashCodes.contains(newnode.hashCode())){
                     foundHashCodes.add(newnode.hashCode());
                     foundNodes.insert(newnode);
+                } else {
+                    //state already exist but the more direct path to the state will be saved
+                    Node matchingNode = foundNodes.getMatchingHashCode(newnode.hashCode());
+                    if (matchingNode.getDepth() <= newnode.getDepth()) {
+
+                    } else {
+                        foundNodes.remove(matchingNode);
+                        foundNodes.insert(newnode);
+                    }
                 }
             }
         } foundNodes.printTree("tree");
