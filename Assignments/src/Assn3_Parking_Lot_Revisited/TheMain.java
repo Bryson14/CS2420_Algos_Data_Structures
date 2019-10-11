@@ -15,12 +15,12 @@ public class TheMain {
 
         System.out.println(System.getProperty("user.dir"));
         Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("Assignments\\src\\Assn3_Parking_Lot_Revisited\\jamsAll.txt");
-        int num_puzzles = puzzles.length;
+//        int num_puzzles = puzzles.length;
 
-//        int num_puzzles = 41;
+        int num_puzzles = 9;
 
         boolean doPrint = true;
-        boolean dontRunAVLTreeSolve = true;
+        boolean dontRunAVLTreeSolve = false;
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < num_puzzles; i++) {

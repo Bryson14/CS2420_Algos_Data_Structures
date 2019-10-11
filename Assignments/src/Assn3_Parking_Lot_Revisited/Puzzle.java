@@ -282,11 +282,13 @@ public class Puzzle {
                 } else {
                     //state already exist but the more direct path to the state will be saved
                     Node matchingNode = foundNodes.getMatchingHashCode(newnode.hashCode());
-                    if (matchingNode.getDepth() <= newnode.getDepth()) {
+                    if (matchingNode != null){
+                        if (matchingNode.getDepth() <= newnode.getDepth()) {
 
-                    } else {
-                        foundNodes.remove(matchingNode);
-                        foundNodes.insert(newnode);
+                        } else {
+                            foundNodes.remove(matchingNode);
+                            foundNodes.insert(newnode);
+                        }
                     }
                 }
             }
