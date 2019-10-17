@@ -6,10 +6,8 @@ public class Reviews {
 
     public Reviews() {
 
-        H = new QuadraticProbingHashTable<WordInfo>();
+        this.H = new QuadraticProbingHashTable<>();
     }
-
-
 
     public String toString() {
         int LIMIT = 20;
@@ -39,6 +37,16 @@ public class Reviews {
                 }
                 ReviewInfo r = new ReviewInfo(score, words);
                 System.out.println(r.toString());
+
+                for (int i = 1; i < words.length; i++) { // starts at one to avoid indexing review score
+                    WordInfo temp = new WordInfo(words[i].toLowerCase());
+                    if (H.contains(temp)){
+                        H.find(temp).update(score);
+                    } else {
+                        temp.update(score);
+                        H.insert(temp);
+                    }
+                }
             }
             System.out.println("Number of Reviews " +  line_count);
 
@@ -70,12 +78,12 @@ public class Reviews {
         // Constructors
         WordInfo(String word) {
             this.word = word;
-            totalScore=0;
+            totalScore = 0;
             numberOfOccurences = 0;
         }
 
         public void update(int score){
-            this.totalScore+=score;
+            this.totalScore += score;
             this.numberOfOccurences++;
         }
 
@@ -88,9 +96,11 @@ public class Reviews {
 
 
             try {
+                String workingDir = "Assignments\\src\\assn4_hashing\\";
                 Reviews r1 = new Reviews();
-                r1.readReviews("movieReviews.txt");
+                r1.readReviews(workingDir + "movieReviewsShort.txt");
                 System.out.println(r1);
+                System.out.println("Size of hash table is: " + r1.H.size());
 
 
             } catch (IOException e) {
@@ -99,6 +109,7 @@ public class Reviews {
 
             WordInfo w = new WordInfo("fat");
             w.update(4);
+            w.update(2);
             System.out.println(w.toString());
         }
 

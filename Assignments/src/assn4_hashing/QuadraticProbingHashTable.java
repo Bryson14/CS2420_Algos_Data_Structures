@@ -16,13 +16,12 @@ package assn4_hashing;
  * Note that all "matching" is based on the equals method.
  * @author Mark Allen Weiss
  */
-public class QuadraticProbingHashTable<AnyType>
+public class QuadraticProbingHashTable<E>
 {
     /**
      * Construct the hash table.
      */
-    public QuadraticProbingHashTable( )
-    {
+    public QuadraticProbingHashTable( ) {
         this( DEFAULT_TABLE_SIZE );
     }
 
@@ -30,8 +29,7 @@ public class QuadraticProbingHashTable<AnyType>
      * Construct the hash table.
      * @param size the approximate initial size.
      */
-    public QuadraticProbingHashTable( int size )
-    {
+    public QuadraticProbingHashTable( int size ) {
         allocateArray( size );
         doClear( );
     }
@@ -41,8 +39,7 @@ public class QuadraticProbingHashTable<AnyType>
      * already present, do nothing.
      * @param x the item to insert.
      */
-    public boolean insert( AnyType x )
-    {
+    public boolean insert( E x ) {
         // Insert x as active
         int currentPos = findPos( x );
         if( isActive( currentPos ) )
@@ -73,9 +70,8 @@ public class QuadraticProbingHashTable<AnyType>
     /**
      * Expand the hash table.
      */
-    private void rehash( )
-    {
-        HashEntry<AnyType> [ ] oldArray = array;
+    private void rehash( ) {
+        HashEntry<E> [ ] oldArray = array;
 
         // Create a new double-sized, empty table
         allocateArray( 2 * oldArray.length );
@@ -83,7 +79,7 @@ public class QuadraticProbingHashTable<AnyType>
         theSize = 0;
 
         // Copy table over
-        for( HashEntry<AnyType> entry : oldArray )
+        for( HashEntry<E> entry : oldArray )
             if( entry != null && entry.isActive )
                 insert( entry.element );
     }
@@ -93,8 +89,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param x the item to search for.
      * @return the position where the search terminates.
      */
-    private int findPos( AnyType x )
-    {
+    private int findPos( E x ) {
         int offset = 1;
         int currentPos = myhash( x );
 
@@ -115,8 +110,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param x the item to remove.
      * @return true if item removed
      */
-    public boolean remove( AnyType x )
-    {
+    public boolean remove( E x ) {
         int currentPos = findPos( x );
         if( isActive( currentPos ) )
         {
@@ -132,8 +126,7 @@ public class QuadraticProbingHashTable<AnyType>
      * Get current size.
      * @return the size.
      */
-    public int size( )
-    {
+    public int size( ) {
         return theSize;
     }
 
@@ -141,8 +134,7 @@ public class QuadraticProbingHashTable<AnyType>
      * Get length of internal table.
      * @return the size.
      */
-    public int capacity( )
-    {
+    public int capacity( ) {
         return array.length;
     }
 
@@ -151,8 +143,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param x the item to search for.
      * @return true if item is found
      */
-    public boolean contains( AnyType x )
-    {
+    public boolean contains( E x ) {
         int currentPos = findPos( x );
         return isActive( currentPos );
     }
@@ -162,8 +153,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param x the item to search for.
      * @return the matching item.
      */
-    public AnyType find( AnyType x )
-    {
+    public E find(E x ) {
         int currentPos = findPos( x );
         if (!isActive( currentPos )) {
             return null;
@@ -178,29 +168,25 @@ public class QuadraticProbingHashTable<AnyType>
      * @param currentPos the result of a call to findPos.
      * @return true if currentPos is active.
      */
-    private boolean isActive( int currentPos )
-    {
+    private boolean isActive( int currentPos ) {
         return array[ currentPos ] != null && array[ currentPos ].isActive;
     }
 
     /**
      * Make the hash table logically empty.
      */
-    public void makeEmpty( )
-    {
+    public void makeEmpty( ) {
         doClear( );
     }
 
-    private void doClear( )
-    {
+    private void doClear( ) {
         occupiedCt = 0;
         for( int i = 0; i < array.length; i++ )
             array[ i ] = null;
     }
 
-    private int myhash( AnyType x )
-    {
-        int hashVal = x.hashCode( );
+    private int myhash( E x ) {
+        int hashVal = x.hashCode();
 
         hashVal %= array.length;
         if( hashVal < 0 )
@@ -209,18 +195,16 @@ public class QuadraticProbingHashTable<AnyType>
         return hashVal;
     }
 
-    private static class HashEntry<AnyType>
-    {
-        public AnyType  element;   // the element
+    private static class HashEntry<E> {
+        public E element;   // the element
         public boolean isActive;  // false if marked deleted
 
-        public HashEntry( AnyType e )
+        public HashEntry(E e )
         {
             this( e, true );
         }
 
-        public HashEntry( AnyType e, boolean i )
-        {
+        public HashEntry(E e, boolean i ) {
             element  = e;
             isActive = i;
         }
@@ -228,7 +212,7 @@ public class QuadraticProbingHashTable<AnyType>
 
     private static final int DEFAULT_TABLE_SIZE = 101;
 
-    private HashEntry<AnyType> [ ] array; // The array of elements
+    private HashEntry<E> [ ] array; // The array of elements
     private int occupiedCt;                 // The number of occupied cells
     private int theSize;                  // Current size
 
@@ -236,8 +220,7 @@ public class QuadraticProbingHashTable<AnyType>
      * Internal method to allocate array.
      * @param arraySize the size of the array.
      */
-    private void allocateArray( int arraySize )
-    {
+    private void allocateArray( int arraySize ) {
         array = new HashEntry[ nextPrime( arraySize ) ];
     }
 
@@ -246,8 +229,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param n the starting number (must be positive).
      * @return a prime number larger than or equal to n.
      */
-    private static int nextPrime( int n )
-    {
+    private static int nextPrime( int n ) {
         if( n % 2 == 0 )
             n++;
 
@@ -263,8 +245,7 @@ public class QuadraticProbingHashTable<AnyType>
      * @param n the number to test.
      * @return the result of the test.
      */
-    private static boolean isPrime( int n )
-    {
+    private static boolean isPrime( int n ) {
         if( n == 2 || n == 3 )
             return true;
 
@@ -280,8 +261,7 @@ public class QuadraticProbingHashTable<AnyType>
 
 
     // Simple main
-    public static void main( String [ ] args )
-    {
+    public static void main( String [ ] args ) {
         QuadraticProbingHashTable<String> H = new QuadraticProbingHashTable<>( );
 
 
