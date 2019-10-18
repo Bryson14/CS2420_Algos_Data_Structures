@@ -10,7 +10,7 @@ public class Reviews {
     }
 
     public String toString() {
-        int LIMIT = 20;
+        int LIMIT = 100;
         return name + "\n" + H.toString(LIMIT);
     }
 
@@ -39,17 +39,21 @@ public class Reviews {
                 System.out.println(r.toString());
 
                 for (int i = 1; i < words.length; i++) { // starts at one to avoid indexing review score
-                    WordInfo temp = new WordInfo(words[i].toLowerCase());
-                    if (H.contains(words[i])){
+                    String word = words[i].toLowerCase();
+                    if (H.contains(word)){
                         //existing entry
-                        H.find(words[i].toLowerCase()).update(score);
+                        H.find(word).update(score);
 
                     } else {
                         //new entry
+                        WordInfo temp = new WordInfo(word);
                         temp.update(score);
-                        H.insert(words[i].toLowerCase(), temp);
+                        H.insert(word, temp);
                     }
                 }
+                /*
+                a, the (i suspect the first in the line doens't update),
+                 */
             }
             System.out.println("Number of Reviews " +  line_count);
 
@@ -101,7 +105,7 @@ public class Reviews {
             try {
                 String workingDir = "Assignments\\src\\assn4_hashing\\";
                 Reviews r1 = new Reviews();
-                r1.readReviews(workingDir + "movieReviewsShort.txt");
+                r1.readReviews(workingDir + "movieReviews.txt");
                 System.out.println(r1);
                 System.out.println("Size of hash table is: " + r1.H.size());
 
