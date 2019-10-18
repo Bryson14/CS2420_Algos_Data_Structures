@@ -11,18 +11,26 @@ package assn4_hashing;
 // void makeEmpty( )      --> Remove all items
 
 
+import java.util.ArrayList;
+
 /**
  * Probing table implementation of hash tables.
  * Note that all "matching" is based on the equals method.
  * @author Mark Allen Weiss
  */
-public class QuadraticProbingHashTable<E>
-{
-    /**
-     * Construct the hash table.
-     */
+public class QuadraticProbingHashTable<K, V> {
+
+
+    private static final int DEFAULT_TABLE_SIZE = 101;
+
+    private HashEntry<V> [] array; // The array of elements
+    private int occupiedCt;                 // The number of occupied cells
+    private int theSize;                  // Current size
+    private ArrayList<K> keys;
+
     public QuadraticProbingHashTable( ) {
         this( DEFAULT_TABLE_SIZE );
+        this.keys = new ArrayList<>();
     }
 
     /**
@@ -32,21 +40,25 @@ public class QuadraticProbingHashTable<E>
     public QuadraticProbingHashTable( int size ) {
         allocateArray( size );
         doClear( );
+        this.keys = new ArrayList<>();
     }
 
     /**
      * Insert into the hash table. If the item is
      * already present, do nothing.
-     * @param x the item to insert.
+     * @param key the key to calculate memory location
+     * @param value the item to insert.
      */
-    public boolean insert( E x ) {
+    public boolean insert(K key, V value) {
         // Insert x as active
-        int currentPos = findPos( x );
+        int currentPos = findPos( key );
         if( isActive( currentPos ) )
             return false;
 
-        array[ currentPos ] = new HashEntry<>( x, true );
+        array[ currentPos ] = new HashEntry<>( value, true );
         theSize++;
+
+        keys.add(key);
 
         // Rehash; see Section 5.5
         if( ++occupiedCt > array.length / 2 )
@@ -71,17 +83,19 @@ public class QuadraticProbingHashTable<E>
      * Expand the hash table.
      */
     private void rehash( ) {
-        HashEntry<E> [ ] oldArray = array;
+        QuadraticProbingHashTable<K, V> oldTable = new QuadraticProbingHashTable<>(this.array.length);
+        oldTable.array = this.array.clone();
+        oldTable.keys = this.keys;
 
         // Create a new double-sized, empty table
-        allocateArray( 2 * oldArray.length );
+        allocateArray( 2 * oldTable.array.length);
         occupiedCt = 0;
         theSize = 0;
 
         // Copy table over
-        for( HashEntry<E> entry : oldArray )
-            if( entry != null && entry.isActive )
-                insert( entry.element );
+        for (int i = 0; i < keys.size(); i++) {
+            insert(keys.get(i), oldTable.find(keys.get(i)));
+        }
     }
 
     /**
@@ -89,12 +103,12 @@ public class QuadraticProbingHashTable<E>
      * @param x the item to search for.
      * @return the position where the search terminates.
      */
-    private int findPos( E x ) {
+    private int findPos( K x ) {
         int offset = 1;
         int currentPos = myhash( x );
 
         while( array[ currentPos ] != null &&
-                !array[ currentPos ].element.equals( x ) )
+                !((Reviews.WordInfo)array[ currentPos ].element).word.equals(x) )
         {
             currentPos += offset;  // Compute ith probe
             offset += 2;
@@ -110,12 +124,13 @@ public class QuadraticProbingHashTable<E>
      * @param x the item to remove.
      * @return true if item removed
      */
-    public boolean remove( E x ) {
+    public boolean remove( K x ) {
         int currentPos = findPos( x );
         if( isActive( currentPos ) )
         {
             array[ currentPos ].isActive = false;
             theSize--;
+            keys.remove(x);
             return true;
         }
         else
@@ -143,7 +158,7 @@ public class QuadraticProbingHashTable<E>
      * @param x the item to search for.
      * @return true if item is found
      */
-    public boolean contains( E x ) {
+    public boolean contains( K x ) {
         int currentPos = findPos( x );
         return isActive( currentPos );
     }
@@ -153,7 +168,7 @@ public class QuadraticProbingHashTable<E>
      * @param x the item to search for.
      * @return the matching item.
      */
-    public E find(E x ) {
+    public V find(K x ) {
         int currentPos = findPos( x );
         if (!isActive( currentPos )) {
             return null;
@@ -181,11 +196,13 @@ public class QuadraticProbingHashTable<E>
 
     private void doClear( ) {
         occupiedCt = 0;
+        if (keys == null) {}
+        else keys.clear();
         for( int i = 0; i < array.length; i++ )
             array[ i ] = null;
     }
 
-    private int myhash( E x ) {
+    private int myhash(K x) {
         int hashVal = x.hashCode();
 
         hashVal %= array.length;
@@ -195,27 +212,20 @@ public class QuadraticProbingHashTable<E>
         return hashVal;
     }
 
-    private static class HashEntry<E> {
-        public E element;   // the element
+    private static class HashEntry<V> {
+        public V element;   // the element
         public boolean isActive;  // false if marked deleted
 
-        public HashEntry(E e )
+        public HashEntry(V e )
         {
             this( e, true );
         }
 
-        public HashEntry(E e, boolean i ) {
+        public HashEntry(V e, boolean i ) {
             element  = e;
             isActive = i;
         }
     }
-
-    private static final int DEFAULT_TABLE_SIZE = 101;
-
-    private HashEntry<E> [ ] array; // The array of elements
-    private int occupiedCt;                 // The number of occupied cells
-    private int theSize;                  // Current size
-
     /**
      * Internal method to allocate array.
      * @param arraySize the size of the array.
@@ -223,6 +233,7 @@ public class QuadraticProbingHashTable<E>
     private void allocateArray( int arraySize ) {
         array = new HashEntry[ nextPrime( arraySize ) ];
     }
+
 
     /**
      * Internal method to find a prime number at least as large as n.
@@ -262,7 +273,7 @@ public class QuadraticProbingHashTable<E>
 
     // Simple main
     public static void main( String [ ] args ) {
-        QuadraticProbingHashTable<String> H = new QuadraticProbingHashTable<>( );
+        QuadraticProbingHashTable<String, String> H = new QuadraticProbingHashTable<>( );
 
 
         long startTime = System.currentTimeMillis( );
@@ -274,9 +285,9 @@ public class QuadraticProbingHashTable<E>
 
 
         for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            H.insert( ""+i );
+            H.insert( ""+i , ""+i );
         for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            if( H.insert( ""+i ) )
+            if( H.insert( ""+i , ""+i ) )
                 System.out.println( "OOPS!!! " + i );
         for( int i = 1; i < NUMS; i+= 2 )
             H.remove( ""+i );

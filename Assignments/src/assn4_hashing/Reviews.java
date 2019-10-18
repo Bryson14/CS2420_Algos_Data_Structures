@@ -16,7 +16,7 @@ public class Reviews {
 
 
     private String name;
-    private QuadraticProbingHashTable<WordInfo> H;
+    private QuadraticProbingHashTable<String, WordInfo> H;
 
     public void readReviews(String filename)
             throws FileNotFoundException, IOException {
@@ -40,11 +40,14 @@ public class Reviews {
 
                 for (int i = 1; i < words.length; i++) { // starts at one to avoid indexing review score
                     WordInfo temp = new WordInfo(words[i].toLowerCase());
-                    if (H.contains(temp)){
-                        H.find(temp).update(score);
+                    if (H.contains(words[i])){
+                        //existing entry
+                        H.find(words[i].toLowerCase()).update(score);
+
                     } else {
+                        //new entry
                         temp.update(score);
-                        H.insert(temp);
+                        H.insert(words[i].toLowerCase(), temp);
                     }
                 }
             }
@@ -70,7 +73,7 @@ public class Reviews {
             }
         }
 
-    private static class WordInfo {
+    static class WordInfo {
         int totalScore;
         int numberOfOccurences;
         String word;
