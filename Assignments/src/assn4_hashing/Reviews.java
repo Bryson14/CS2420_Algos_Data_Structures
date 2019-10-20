@@ -14,6 +14,14 @@ public class Reviews {
         return name + "\n" + H.toString(LIMIT);
     }
 
+    public double getWordScore(String word) {
+        if (H.contains(word)) {
+            return H.find(word).averageScore;
+        } else {
+            return -1.0;
+        }
+    }
+
 
     private String name;
     private QuadraticProbingHashTable<String, WordInfo> H;
@@ -36,7 +44,7 @@ public class Reviews {
                     throw new NumberFormatException("Expected integer at line " + line_count + " in file " + filename);
                 }
                 ReviewInfo r = new ReviewInfo(score, words);
-                System.out.println(r.toString());
+//                System.out.println(r.toString());
 
                 for (int i = 1; i < words.length; i++) { // starts at one to avoid indexing review score
                     String word = words[i].toLowerCase();
@@ -46,16 +54,18 @@ public class Reviews {
 
                     } else {
                         //new entry
-                        WordInfo temp = new WordInfo(word);
-                        temp.update(score);
-                        H.insert(word, temp);
+                        if (word.length() != 1 ){ // avoid special characters, meaningless words and numbers
+                            WordInfo temp = new WordInfo(word);
+                            temp.update(score);
+                            H.insert(word, temp);
+                        }
                     }
                 }
                 /*
-                a, the (i suspect the first in the line doens't update),
+                a, the (i suspect the first in the line does not update),
                  */
             }
-            System.out.println("Number of Reviews " +  line_count);
+//            System.out.println("Number of Reviews " +  line_count);
 
         }
         private static class ReviewInfo {
@@ -79,23 +89,26 @@ public class Reviews {
 
     static class WordInfo {
         int totalScore;
-        int numberOfOccurences;
+        double averageScore;
+        int numberOfOccurrences;
         String word;
 
         // Constructors
         WordInfo(String word) {
             this.word = word;
             totalScore = 0;
-            numberOfOccurences = 0;
+            numberOfOccurrences = 0;
+            averageScore = 0.0;
         }
 
         public void update(int score){
             this.totalScore += score;
-            this.numberOfOccurences++;
+            this.numberOfOccurrences++;
+            this.averageScore = (double)totalScore / (double)numberOfOccurrences;
         }
 
         public String toString() {
-           return "Word " + word + " [" + totalScore +", " + numberOfOccurences+"]";
+           return "Word " + word + " [" + averageScore +", " + numberOfOccurrences +"]";
         }
     }
 
