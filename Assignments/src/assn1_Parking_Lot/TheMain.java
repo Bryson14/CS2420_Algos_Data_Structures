@@ -15,7 +15,7 @@ public class TheMain {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // read all the puzzles in file.  Only the first few are solvable without additional strategies
-        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("jamsAll.txt");
+        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("src\\assn1_Parking_Lot\\jamsAll.txt");
 //        int num_puzzles = puzzles.length;
         int num_puzzles = 7;
 
