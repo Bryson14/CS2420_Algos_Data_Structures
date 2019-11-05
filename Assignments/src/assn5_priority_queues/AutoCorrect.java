@@ -45,7 +45,7 @@ public class AutoCorrect {
 
             for (int i = 0 ; i < count; i++) {
                 Term max = h.pop();
-                if (max != null ) System.out.print(max);
+                if (max != null ) System.out.println(max.getWord());
             }
 
         } catch (Exception e) {
