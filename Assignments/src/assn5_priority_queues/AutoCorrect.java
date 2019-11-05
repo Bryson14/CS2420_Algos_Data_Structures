@@ -27,15 +27,15 @@ public class AutoCorrect {
             String prefix = user.next().toLowerCase();
             int count = user.nextInt();
             SkewHeap h = new SkewHeap();
+            user.close();
 
             boolean end = false;
             boolean start = false;
             int j = 0;
 
             while (!end) {
-                if (j >= words.size() - 1) {
-                    end = true;
-                }
+                if (j >= words.size() - 1) end = true;
+
                 if (words.get(j).getWord().startsWith(prefix)) {
                     h.insert(words.get(j));
                     start = true;
@@ -51,6 +51,5 @@ public class AutoCorrect {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

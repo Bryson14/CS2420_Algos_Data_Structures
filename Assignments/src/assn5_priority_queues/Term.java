@@ -1,6 +1,5 @@
 package assn5_priority_queues;
 
-//public class Term<AnyType implements Comparable<? super AnyType>>{
 public class Term implements Comparable<Term> {
 
     private long freq;
@@ -16,7 +15,7 @@ public class Term implements Comparable<Term> {
     }
 
     public int compareTo(Term t2){
-        if (this.freq==t2.freq) return 0;
+        if (this.freq == t2.freq) return 0;
         else if (this.freq < t2.freq) return -1;
         return 1;
      }
@@ -25,4 +24,3 @@ public class Term implements Comparable<Term> {
         return word;
     }
 }
-
