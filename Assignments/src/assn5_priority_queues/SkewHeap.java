@@ -57,6 +57,9 @@ class SkewHeap {
     }
 
     public Term pop() {
+        if (root == null || root.value == null) {
+            return null;
+        }
         Term term = root.value;
         root = merge(root.left, root.right);
         return term;

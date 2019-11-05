@@ -33,6 +33,9 @@ public class AutoCorrect {
             int j = 0;
 
             while (!end) {
+                if (j >= words.size() - 1) {
+                    end = true;
+                }
                 if (words.get(j).getWord().startsWith(prefix)) {
                     h.insert(words.get(j));
                     start = true;
@@ -41,7 +44,8 @@ public class AutoCorrect {
             }
 
             for (int i = 0 ; i < count; i++) {
-                System.out.print(h.pop());
+                Term max = h.pop();
+                if (max != null ) System.out.print(max);
             }
 
         } catch (Exception e) {
