@@ -13,6 +13,7 @@ public class test {
         lst.add(0);
         lst.add(-1);
         lst.add(-1);
+        System.out.println(u.printList());
         System.out.println(lst.equals(u.getPaths()));
     }
 }

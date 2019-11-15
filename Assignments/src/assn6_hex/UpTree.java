@@ -30,7 +30,6 @@ public class UpTree {
         }
         paths.set(a, -1);
         roots.add(a);
-
     }
 
     /**
@@ -38,8 +37,19 @@ public class UpTree {
      * @param a
      * @return return true if int a was found
      */
-    public boolean find(int a) {
-        return true;
+    private Integer findRoot(int a) {
+        try {
+           int parent = a;
+
+           while (roots.get(parent) >= 0) {
+               parent = roots.get(parent);
+           }
+
+           return parent;
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
@@ -54,5 +64,18 @@ public class UpTree {
 
     public ArrayList<Integer> getPaths() {
         return paths;
+    }
+
+    public String printList() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < paths.size(); i++) {
+            sb.append(paths.get(i) + "\t");
+        }
+        sb.append("\n");
+        for (int i = 0; i < paths.size(); i++) {
+            sb.append(i + "\t");
+        }
+
+        return sb.toString();
     }
 }
