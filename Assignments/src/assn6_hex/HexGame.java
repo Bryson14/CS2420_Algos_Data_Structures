@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class HexGame {
 
     public static void main(String[] args) {
+
         Scanner move1;
         int[] edgeLeft, edgeRight, edgeTop, edgeBottom;
 
