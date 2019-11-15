@@ -92,6 +92,11 @@ public class UpTree {
         }
     }
 
+    /**
+     * takes a list of integers and attempts to union them to the known-to-exist node a
+     * @param a int that is in the uptree
+     * @param neighbors ints that may or may not be in the uptree
+     */
     public void tryUnion(int a, int[] neighbors) {
         for (int b : neighbors) {
             if (b < 1) {

@@ -15,19 +15,20 @@ public class HexGame {
         Scanner move1;
         int[] edgeLeft, edgeRight, edgeTop, edgeBottom;
 
+        // Finds which spots are edges for future reference
         edgeLeft = new int[11];
         edgeRight = new int[11];
         edgeTop = new int[11];
         edgeBottom = new int[11];
 
         for (int i = 0; i < 11; i++) {
-            edgeLeft[2*i] = i * 11 + 1;
-            edgeRight[2*i+1] = i * 11 + 11;
+            edgeLeft[i] = i * 11 + 1;
+            edgeRight[i] = i * 11 + 11;
         }
 
         for (int i = 0; i < 11; i++) {
-            edgeTop[2*i] = i + 1;
-            edgeBottom[2*i+1] = i + 111;
+            edgeTop[i] = i + 1;
+            edgeBottom[i] = i + 111;
         }
 
         try {
@@ -46,11 +47,17 @@ public class HexGame {
                 if (turns) {
                     playerBlue.addRoot(a);
                     playerBlue.tryUnion(a, neighborIdx);
-                    checkWinner(playerBlue, true);
+                    if (checkWinner(playerBlue, edgeLeft, edgeRight)) {
+                        System.out.println("Blue player wins!");
+                        break;
+                    }
                 } else {
                     playerRed.addRoot(a);
                     playerRed.tryUnion(a, neighborIdx);
-                    checkWinner(playerRed, false);
+                    if (checkWinner(playerBlue, edgeBottom, edgeTop)) {
+                        System.out.println("Red player wins!");
+                        break;
+                    }
                 }
                 turns ^= true;
             }
@@ -62,10 +69,19 @@ public class HexGame {
         } catch (FileNotFoundException e) {
 
         }
-
     }
-    public static boolean checkWinner(UpTree player, boolean isBluePlayer) {
-
-        return true;
+    public static boolean checkWinner(UpTree player, int[] edge1, int[] edge2) {
+        for (int a : edge2) {
+            if (player.find(a) != 0) { //a is in tree
+                for (int b: edge1) {
+                    if (player.find(b) != 0) { //b is in tree
+                        if (player.find(a) == player.find(b)){ //both a and b belong to same tree
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

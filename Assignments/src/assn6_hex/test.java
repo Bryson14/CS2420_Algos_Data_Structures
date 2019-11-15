@@ -24,14 +24,5 @@ public class test {
         System.out.println(u.union(1, 4));
         System.out.println(u.printList());
 
-        int[] edges = new int [22];
-        for (int i = 0; i < 11; i++) {
-            edges[2*i] = i + 1;
-            edges[2*i+1] = i + 111;
-        }
-
-        for (int a : edges) {
-            System.out.println(a);
-        }
     }
 }
