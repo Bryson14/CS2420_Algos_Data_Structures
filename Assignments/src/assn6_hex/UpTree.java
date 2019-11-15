@@ -17,7 +17,7 @@ public class UpTree {
      * Adds item as a new root. Does not allow overwriting
      * @param a integer to addRoot
      */
-    public void addRoot(int a) {
+    void addRoot(int a) {
         // adding the first item in the tree
         if (a < 1) return; //cannot addRoot negative or existing integers
 
@@ -29,7 +29,7 @@ public class UpTree {
 
     /**
      * if a is found, returns its parent root
-     * @param a
+     * @param a int to be found
      * @return return 0 if int A was not found
      */
     public int find(int a) {
@@ -55,7 +55,7 @@ public class UpTree {
      * @param b second integer
      * @return true if both a and b exist and were joined
      */
-    public boolean union(int a, int b) {
+    boolean union(int a, int b) {
         int rootA = find(a);
         int rootB = find(b);
         if (rootA == rootB) { // they are in the same tree already
@@ -80,8 +80,9 @@ public class UpTree {
      * finds node A and connects it and all the intermediary nodes directly to the root
      * @param a int
      */
-    public void pathCompressionFind(int a) {
+    void pathCompressionFind(int a) {
         int root = find(a);
+        if (root == 0) return;
         int parent = paths.get(a);
         int curr = a;
 
@@ -97,7 +98,7 @@ public class UpTree {
      * @param a int that is in the uptree
      * @param neighbors ints that may or may not be in the uptree
      */
-    public void tryUnion(int a, int[] neighbors) {
+    void tryUnion(int a, int[] neighbors) {
         for (int b : neighbors) {
             if (b < 1) {
                 continue;
@@ -108,7 +109,7 @@ public class UpTree {
 
     /**
      * returns array list of paths for testing purposes
-     * @return
+     * @return ArrayList of integers with structure of upTree
      */
     public ArrayList<Integer> getPaths() {
         return paths;
@@ -116,12 +117,12 @@ public class UpTree {
 
     /**
      * Displays a reader-friendly print statement with pointer on top and index location on bottom
-     * @return
+     * @return String on upTree structure
      */
-    public String printList() {
+    String printList() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < paths.size(); i++) {
-            sb.append(paths.get(i) + "\t");
+        for (int a : paths) {
+            sb.append(a + "\t");
         }
         sb.append("\n");
         for (int i = 0; i < paths.size(); i++) {

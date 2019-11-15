@@ -6,11 +6,6 @@ import java.util.Scanner;
 
 public class HexGame {
 
-
-    public void tryUnion(int x) {
-        int[] neighborIdx = {x-1, x+1,x-11, x-10, x+10, x+11};
-    }
-
     public static void main(String[] args) {
         Scanner move1;
         int[] edgeLeft, edgeRight, edgeTop, edgeBottom;
@@ -41,6 +36,7 @@ public class HexGame {
             UpTree playerRed = new UpTree();
 
             boolean turns = true;
+
             while(move1.hasNextInt()) {
                 int a = move1.nextInt();
                 int[] neighborIdx = {a-1, a+1,a-11, a-10, a+10, a+11};
@@ -63,21 +59,20 @@ public class HexGame {
             }
 
             System.out.println(playerBlue.printList());
-            System.out.println("");
+            System.out.println();
             System.out.println(playerRed.printList());
 
         } catch (FileNotFoundException e) {
-
+            System.out.println("File not found\n" + e);
         }
     }
-    public static boolean checkWinner(UpTree player, int[] edge1, int[] edge2) {
+
+    private static boolean checkWinner(UpTree player, int[] edge1, int[] edge2) {
         for (int a : edge2) {
             if (player.find(a) != 0) { //a is in tree
                 for (int b: edge1) {
-                    if (player.find(b) != 0) { //b is in tree
-                        if (player.find(a) == player.find(b)){ //both a and b belong to same tree
-                            return true;
-                        }
+                    if (player.find(a) == player.find(b)) { //both a and b belong to same tree
+                        return true;
                     }
                 }
             }

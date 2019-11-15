@@ -1,7 +1,5 @@
 package assn6_hex;
 
-import java.util.ArrayList;
-
 public class test {
 
     public static void main(String[] args) {
@@ -21,6 +19,7 @@ public class test {
         u.union(6,2);
         u.addRoot(2);
         u.pathCompressionFind(1);
+        u.pathCompressionFind(98);
         System.out.println(u.union(1, 4));
         System.out.println(u.printList());
 
