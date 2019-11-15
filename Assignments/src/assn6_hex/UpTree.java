@@ -17,14 +17,18 @@ public class UpTree {
      * Adds item as a new root. Does not allow overwriting
      * @param a integer to addRoot
      */
-    void addRoot(int a) {
+    boolean addRoot(int a) {
         // adding the first item in the tree
-        if (a < 1) return; //cannot addRoot negative or existing integers
+        if (a < 1) return false; //cannot addRoot negative or existing integers
 
         while (paths.size() <= a) { //adjusting size of array
             paths.add(0);
         }
-        if (paths.get(a) == 0) paths.set(a, -1); //will not override if node already exists
+        if (paths.get(a) == 0) {
+            paths.set(a, -1); //will not override if node already exists
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -129,6 +133,31 @@ public class UpTree {
             sb.append(i + "\t");
         }
 
+        return sb.toString();
+    }
+
+    /**
+     *
+     */
+    String printHexBoard() {
+        StringBuilder sb = new StringBuilder();
+        int eleven = 0;
+        for (int a = 0; a < paths.size(); a ++) {
+            int b = paths.get(a);
+            if (b > 9) sb.append(b + "   "); //all this crap is to make it lot pretty when it prints out
+            else if (b < 0) sb.append((b + "   "));
+            else if (b < -9) sb.append(b + "  ");
+            else sb.append(b + "    ");
+            eleven ++;
+            if (eleven >= 11) {
+                eleven = 0;
+                sb.append("\n");
+                for(int i = 0; i < a/11; i ++){
+                    sb.append("  ");
+                }
+                sb.append("  ");
+            }
+        }
         return sb.toString();
     }
 }
