@@ -44,7 +44,7 @@ public class HexGame {
             while(move1.hasNextInt()) {
                 int a = move1.nextInt();
                 if (!takenSpots.contains(a)) { //not allowing players to override taken spots
-                    int[] neighborIdx = {a-1, a+1,a-11, a-10, a+10, a+11};
+                    int[] neighborIdx = getNeighbors(a);
                     if (turns) {
                         playerBlue.addRoot(a);
                         playerBlue.tryUnion(a, neighborIdx);
@@ -90,5 +90,44 @@ public class HexGame {
             }
         }
         return false;
+    }
+
+    private static int[] getNeighbors(int a) {
+        if (a == 1) {
+            int[] arr = {1,12};
+            return arr;
+        }
+        else if (a == 11) {
+            int[] arr = {10,21,22};
+            return arr;
+        }
+        else if (a == 111) {
+            int[] arr = {100,101,112};
+            return arr;
+        }
+        else if (a == 121) {
+            int[] arr = {120, 110};
+            return arr;
+        }
+        else if (a < 12) { //top edge
+            int[] arr = {a-1, a+1, a+10, a+11};
+            return arr;
+        }
+        else if (a > 110) {// bottom edge
+            int[] arr = {a-1, a+1,a-11, a-10};
+            return arr;
+        }
+        else if (a % 11 == 0) {//right edge
+            int[] arr = {a-1,a-11, a+10, a+11};
+            return arr;
+        }
+        else if ((a - 1) % 11 == 0) { //left edge
+            int[] arr = { a+1,a-11, a-10, a+11};
+            return arr;
+        }
+        else {
+            int[] arr = {a-1, a+1,a-11, a-10, a+10, a+11};
+            return arr;
+        }
     }
 }
