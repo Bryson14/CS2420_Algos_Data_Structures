@@ -1,35 +1,30 @@
 package assn6_hex;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * takes in integers and preforms smart union on them to form a tree structure
  */
 public class UpTree {
+
     private ArrayList<Integer> paths;
-    private ArrayList<Integer> roots;
-    private HashSet<Integer> nodes;
 
     UpTree() {
         paths = new ArrayList<>();
-        roots = new ArrayList<>();
-        nodes = new HashSet<>();
     }
 
     /**
-     * Adds item as a new root
+     * Adds item as a new root. Does not allow overwriting
      * @param a integer to addRoot
      */
     public void addRoot(int a) {
         // adding the first item in the tree
-        if (a < 1 || nodes.contains(a)) return; //cannot addRoot negative or existing integers
+        if (a < 1) return; //cannot addRoot negative or existing integers
 
         while (paths.size() <= a) { //adjusting size of array
             paths.add(0);
         }
-        paths.set(a, -1);
-        roots.add(a);
+        if (paths.get(a) == 0) paths.set(a, -1); //will not override if node already exists
     }
 
     /**
@@ -41,7 +36,9 @@ public class UpTree {
         try {
            int parent = a;
 
-           while (paths.get(parent) >= 0) {
+           if (paths.get(a) == 0) return 0;
+
+           while (paths.get(parent) > 0) {
                parent = paths.get(parent);
            }
 
@@ -56,12 +53,15 @@ public class UpTree {
      * smart union (union of size)
      * @param a first integer
      * @param b second integer
-     * @return if both a and b exist and were joined
+     * @return true if both a and b exist and were joined
      */
     public boolean union(int a, int b) {
         int rootA = findRoot(a);
         int rootB = findRoot(b);
         if (rootA == rootB) { // they are in the same tree already
+            return false;
+        }
+        if (rootA == 0 || rootB == 0) { //one of the numbers doesn't exist in the list
             return false;
         }
 
@@ -76,6 +76,10 @@ public class UpTree {
         return true;
     }
 
+    /**
+     * finds node A and connects it and all the intermediary nodes directly to the root
+     * @param a int
+     */
     public void pathCompressionFind(int a) {
         int root = findRoot(a);
         int parent = paths.get(a);
@@ -88,10 +92,18 @@ public class UpTree {
         }
     }
 
+    /**
+     * returns array list of paths for testing purposes
+     * @return
+     */
     public ArrayList<Integer> getPaths() {
         return paths;
     }
 
+    /**
+     * Displays a reader-friendly print statement with pointer on top and index location on bottom
+     * @return
+     */
     public String printList() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < paths.size(); i++) {
