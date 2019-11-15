@@ -26,7 +26,7 @@ public class Graph {
     public boolean addEdge(int source, int destination) {
         if (source < 0 || source >= numVertex) return false;
         if (destination < 0 || destination >= numVertex) return false;
-        //add edge
+        //addRoot edge
         G[source].addEdge( source, destination );
         return true;
     }
