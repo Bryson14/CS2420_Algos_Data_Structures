@@ -62,6 +62,18 @@ public class UpTree {
         return true;
     }
 
+    public void pathCompressionFind(int a) {
+        int root = findRoot(a);
+        int parent = paths.get(a);
+        int curr = a;
+
+        while (parent > 0 && curr != root) {
+            paths.set(curr, root);
+            curr = parent;
+            parent = paths.get(parent);
+        }
+    }
+
     public ArrayList<Integer> getPaths() {
         return paths;
     }
