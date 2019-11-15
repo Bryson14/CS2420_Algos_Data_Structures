@@ -32,7 +32,7 @@ public class UpTree {
      * @param a
      * @return return 0 if int A was not found
      */
-    private int findRoot(int a) {
+    public int find(int a) {
         try {
            int parent = a;
 
@@ -56,8 +56,8 @@ public class UpTree {
      * @return true if both a and b exist and were joined
      */
     public boolean union(int a, int b) {
-        int rootA = findRoot(a);
-        int rootB = findRoot(b);
+        int rootA = find(a);
+        int rootB = find(b);
         if (rootA == rootB) { // they are in the same tree already
             return false;
         }
@@ -81,7 +81,7 @@ public class UpTree {
      * @param a int
      */
     public void pathCompressionFind(int a) {
-        int root = findRoot(a);
+        int root = find(a);
         int parent = paths.get(a);
         int curr = a;
 
@@ -89,6 +89,15 @@ public class UpTree {
             paths.set(curr, root);
             curr = parent;
             parent = paths.get(parent);
+        }
+    }
+
+    public void tryUnion(int a, int[] neighbors) {
+        for (int b : neighbors) {
+            if (b < 1) {
+                continue;
+            }
+            union(a,b);
         }
     }
 
