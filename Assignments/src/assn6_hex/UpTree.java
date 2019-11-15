@@ -125,8 +125,8 @@ public class UpTree {
      */
     String printList() {
         StringBuilder sb = new StringBuilder();
-        for (int a : paths) {
-            sb.append(a + "\t");
+        for (int a = 1; a < paths.size(); a ++) {
+            sb.append(paths.get(a) + "\t");
         }
         sb.append("\n");
         for (int i = 0; i < paths.size(); i++) {
@@ -142,7 +142,7 @@ public class UpTree {
     String printHexBoard() {
         StringBuilder sb = new StringBuilder();
         int eleven = 0;
-        for (int a = 0; a < paths.size(); a ++) {
+        for (int a = 1; a < paths.size(); a ++) {
             int b = paths.get(a);
             if (b > 9) sb.append(b + "   "); //all this crap is to make it lot pretty when it prints out
             else if (b < 0) sb.append((b + "   "));
@@ -152,7 +152,7 @@ public class UpTree {
             if (eleven >= 11) {
                 eleven = 0;
                 sb.append("\n");
-                for(int i = 0; i < a/11; i ++){
+                for(int i = 0; i < (a-1)/11; i ++) {
                     sb.append("  ");
                 }
                 sb.append("  ");
