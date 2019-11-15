@@ -1,6 +1,4 @@
-package Assn2_Recursion;
-
-import org.w3c.dom.ls.LSOutput;
+package assn2_Recursion;
 
 public class abc {
     static String a;

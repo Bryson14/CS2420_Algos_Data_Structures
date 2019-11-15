@@ -1,4 +1,4 @@
-package Assn3_Parking_Lot_Revisited;
+package assn3_Parking_Lot_Revisited;
 import java.util.*;
 
 public class Node implements Comparable<Node>{

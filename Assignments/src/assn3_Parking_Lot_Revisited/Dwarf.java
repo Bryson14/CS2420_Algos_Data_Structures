@@ -1,4 +1,4 @@
-package Assn3_Parking_Lot_Revisited;
+package assn3_Parking_Lot_Revisited;
 
 public class Dwarf implements Comparable<Dwarf>{
     private String data;

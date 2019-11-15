@@ -1,4 +1,4 @@
-package Assn3_Parking_Lot_Revisited;
+package assn3_Parking_Lot_Revisited;
 
 import java.io.*;
 
@@ -14,7 +14,7 @@ public class TheMain {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         System.out.println(System.getProperty("user.dir"));
-        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("Assignments\\src\\Assn3_Parking_Lot_Revisited\\jamsAll.txt");
+        Puzzle[] puzzles = Puzzle.readPuzzlesFromFile("Assignments\\src\\assn3_Parking_Lot_Revisited\\jamsAll.txt");
 //        int num_puzzles = puzzles.length;
 
         int num_puzzles = 9;

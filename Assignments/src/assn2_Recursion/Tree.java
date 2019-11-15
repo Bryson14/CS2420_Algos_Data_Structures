@@ -1,4 +1,4 @@
-package Assn2_Recursion;
+package assn2_Recursion;
 
 // ******************ERRORS********************************
 // Throws UnderflowException as appropriate
