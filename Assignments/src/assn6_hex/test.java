@@ -9,11 +9,13 @@ public class test {
         UpTree u = new UpTree();
         u.addRoot(2);
         u.addRoot(1);
-        ArrayList<Integer> lst = new ArrayList<>();
-        lst.add(0);
-        lst.add(-1);
-        lst.add(-1);
+        u.addRoot(5);
+        u.addRoot(8);
+        u.addRoot(7);
+        u.union(2,5);
+        u.union(7, 8);
+        u.union(7,5);
+        u.union(1, 5);
         System.out.println(u.printList());
-        System.out.println(lst.equals(u.getPaths()));
     }
 }

@@ -33,22 +33,22 @@ public class UpTree {
     }
 
     /**
-     * if a is found, the path in compressed
+     * if a is found, returns its parent root
      * @param a
-     * @return return true if int a was found
+     * @return return 0 if int A was not found
      */
-    private Integer findRoot(int a) {
+    private int findRoot(int a) {
         try {
            int parent = a;
 
-           while (roots.get(parent) >= 0) {
-               parent = roots.get(parent);
+           while (paths.get(parent) >= 0) {
+               parent = paths.get(parent);
            }
 
            return parent;
 
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return null;
+        } catch (IndexOutOfBoundsException e) {
+            return 0;
         }
     }
 
@@ -59,6 +59,20 @@ public class UpTree {
      * @return if both a and b exist and were joined
      */
     public boolean union(int a, int b) {
+        int rootA = findRoot(a);
+        int rootB = findRoot(b);
+        if (rootA == rootB) { // they are in the same tree already
+            return false;
+        }
+
+        if (paths.get(rootA) <= paths.get(rootB)) { //A is less, aka greater magnitude than B
+            paths.set(rootA, paths.get(rootA) + paths.get(rootB));
+            paths.set(rootB, rootA);
+        } else {
+            paths.set(rootB, paths.get(rootB) + paths.get(rootA)); // updating the size of root
+            paths.set(rootA, rootB);
+
+        }
         return true;
     }
 
