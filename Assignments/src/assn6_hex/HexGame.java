@@ -51,7 +51,7 @@ public class HexGame {
                 } else {
                     playerRed.addRoot(a);
                     playerRed.tryUnion(a, neighborIdx);
-                    if (checkWinner(playerBlue, edgeBottom, edgeTop)) {
+                    if (checkWinner(playerBlue, edgeTop, edgeBottom)) {
                         System.out.println("Red player wins!");
                         break;
                     }

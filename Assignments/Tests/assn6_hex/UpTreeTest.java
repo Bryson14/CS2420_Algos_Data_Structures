@@ -72,6 +72,8 @@ public class UpTreeTest {
         ut.union(2,5);
         ut.union(5,7);
         ut.addRoot(2);
+        ut.addRoot(-500);
+        ut.union(-55, 9);
         ArrayList<Integer> lst = new ArrayList<>();
         lst.add(0);
         lst.add(-1);
@@ -139,17 +141,37 @@ public class UpTreeTest {
 
     @Test
     public void tryUnion() {
+        UpTree ut = new UpTree();
+        ut.addRoot(2);
+        ut.addRoot(1);
+        ut.addRoot(3);
+        ut.addRoot(4);
+        ut.addRoot(5);
+        ut.addRoot(6);
+        int[] lst1 = {0,1,2,3,8};
+        ut.tryUnion(4, lst1);
+
+        ArrayList<Integer> lst2 = new ArrayList<>();
+        lst2.add(0);
+        lst2.add(4);
+        lst2.add(4);
+        lst2.add(4);
+        lst2.add(-4);
+        lst2.add(-1);
+        lst2.add(-1);
+        Assert.assertEquals(lst2, ut.getPaths());
     }
 
     @Test
     public void find() {
         UpTree ut = new UpTree();
-        ut.addRoot(5);
-        ut.addRoot(6);
-        ut.addRoot(-1);
-    }
-
-    @Test
-    public void printList() {
+        ut.addRoot(1);
+        ut.addRoot(2);
+        ut.addRoot(3);
+        ut.addRoot(4);
+        ut.union(1,3);
+        ut.union(4,1);
+        Assert.assertNotEquals(ut.find(1),ut.find(2));
+        Assert.assertEquals(ut.find(1), ut.find(3));
     }
 }
