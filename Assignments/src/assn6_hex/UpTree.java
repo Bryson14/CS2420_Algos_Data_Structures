@@ -126,28 +126,29 @@ public class UpTree {
     String printList() {
         StringBuilder sb = new StringBuilder();
         for (int a = 1; a < paths.size(); a ++) {
-            sb.append(paths.get(a) + "\t");
+            sb.append(paths.get(a)).append("\t");
         }
         sb.append("\n");
         for (int i = 0; i < paths.size(); i++) {
-            sb.append(i + "\t");
+            sb.append(i).append("\t");
         }
 
         return sb.toString();
     }
 
     /**
-     *
+     * Displays hexBoard representation of the upTree
+     * @return String of 11 x 11 HexBoard structure
      */
     String printHexBoard() {
         StringBuilder sb = new StringBuilder();
         int eleven = 0;
         for (int a = 1; a < paths.size(); a ++) {
             int b = paths.get(a);
-            if (b > 9) sb.append(b + "   "); //all this crap is to make it lot pretty when it prints out
-            else if (b < 0) sb.append((b + "   "));
-            else if (b < -9) sb.append(b + "  ");
-            else sb.append(b + "    ");
+            if (b > 9) sb.append(b).append("   "); //all this crap is to make it lot pretty when it prints out
+            else if (b < -9) sb.append(b).append("  ");
+            else if (b < 0) sb.append(b).append("   ");
+            else sb.append(b).append("    ");
             eleven ++;
             if (eleven >= 11) {
                 eleven = 0;
