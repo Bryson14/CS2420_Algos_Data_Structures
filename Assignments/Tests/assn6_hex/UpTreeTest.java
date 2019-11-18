@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class UpTreeTest {
 
+    //cant add 0's or negatives
     @Test
     public void addRoot() {
         UpTree ut = new UpTree();
@@ -15,6 +16,7 @@ public class UpTreeTest {
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //adding 1 as root puts a -1 into index 1
     @Test
     public void addRoot2() {
         UpTree ut = new UpTree();
@@ -25,6 +27,7 @@ public class UpTreeTest {
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //same idea as addRoot2
     @Test
     public void addRoot3() {
         UpTree ut = new UpTree();
@@ -37,17 +40,22 @@ public class UpTreeTest {
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //adding a root to an existing index doesn't do anything
     @Test
     public void addRoot4() {
         UpTree ut = new UpTree();
         ut.addRoot(1);
+        ut.addRoot(2);
+        ut.union(1,2);
         ut.addRoot(1);
         ArrayList<Integer> lst = new ArrayList<>();
         lst.add(0);
-        lst.add(-1);
+        lst.add(-2);
+        lst.add(1);
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //adding 100 will automatically create space in the array. places -1 at index 100
     @Test
     public void addRoot5() {
         UpTree ut = new UpTree();
@@ -60,6 +68,7 @@ public class UpTreeTest {
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //testing multiple unions
     @Test
     public void union() {
         UpTree ut = new UpTree();
@@ -88,6 +97,7 @@ public class UpTreeTest {
         Assert.assertEquals(lst, ut.getPaths());
     }
 
+    //testing multiple unions. Ignores unions with non-existent numbers
     @Test
     public void union2() {
         UpTree ut = new UpTree();
@@ -162,6 +172,7 @@ public class UpTreeTest {
         Assert.assertEquals(lst2, ut.getPaths());
     }
 
+    //if two numbers are in the same tree, returns the same root
     @Test
     public void find() {
         UpTree ut = new UpTree();
