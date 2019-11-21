@@ -63,6 +63,8 @@ public class UpTree {
         int rootA = find(a);
         int rootB = find(b);
         if (rootA == rootB) { // they are in the same tree already
+            pathCompressionFind(a);
+            pathCompressionFind(b);
             return false;
         }
         if (rootA == 0 || rootB == 0) { //one of the numbers doesn't exist in the list
@@ -104,10 +106,9 @@ public class UpTree {
      */
     void tryUnion(int a, int[] neighbors) {
         for (int b : neighbors) {
-            if (b < 1) {
-                continue;
+            if (b > 0) {
+                union(a,b);
             }
-            union(a,b);
         }
     }
 
