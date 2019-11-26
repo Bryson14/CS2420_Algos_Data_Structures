@@ -5,9 +5,9 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class Graph {
-    int numVertex;  // Number of vertices in the graph.
-    GraphNode[] G;  // Adjacency list for graph.
-    String graphName;  //The file from which the graph was created.
+    private int numVertex;  // Number of vertices in the graph.
+    private GraphNode[] G;  // Adjacency list for graph.
+    private String graphName;  //The file from which the graph was created.
 
 
     public Graph() {
@@ -26,7 +26,6 @@ public class Graph {
     public boolean addEdge(int source, int destination) {
         if (source < 0 || source >= numVertex) return false;
         if (destination < 0 || destination >= numVertex) return false;
-        //addRoot edge
         G[source].addEdge( source, destination );
         return true;
     }
@@ -34,7 +33,6 @@ public class Graph {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( "The Graph " + graphName + " \n" );
-
         for (int i = 0; i < numVertex; i++) {
             sb.append( G[i].toString() );
         }

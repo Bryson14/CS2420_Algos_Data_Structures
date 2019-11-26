@@ -3,7 +3,7 @@ package assn7_wordNet_graphs;
 import java.util.LinkedList;
 
 public class GraphNode {
-    int nodeID;
+    private int nodeID;
     PathInfo p1;
     PathInfo p2;
     private LinkedList<EdgeInfo> succ;
@@ -12,11 +12,11 @@ public class GraphNode {
         this(0);
     }
 
-    public GraphNode(int nodeID){
+    GraphNode(int nodeID){
         this.nodeID = nodeID;
         this.p2 = new PathInfo();
         this.p1 = new PathInfo();
-        this.succ = new LinkedList<EdgeInfo>();
+        this.succ = new LinkedList<>();
     }
 
     public String toString(){
@@ -31,7 +31,7 @@ public class GraphNode {
         return sb.toString();
     }
 
-    public void addEdge(int v1, int v2){
+    void addEdge(int v1, int v2){
         succ.addFirst( new EdgeInfo(v1,v2) );
     }
 }

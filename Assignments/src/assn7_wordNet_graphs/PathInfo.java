@@ -1,6 +1,10 @@
 package assn7_wordNet_graphs;
 
 public class PathInfo {
+
+    int dist;
+    int pred;
+
     PathInfo() {
         clear();
     }
@@ -18,7 +22,4 @@ public class PathInfo {
     public String toString() {
         return "[" + dist + " Pred:" + pred + "] ";
     }
-
-    int dist;
-    int pred;
 }
