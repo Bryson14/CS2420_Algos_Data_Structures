@@ -41,10 +41,10 @@ public class Graph {
         return sb.toString();
     }
 
-    public void makeGraph(String filename) {
+    public void makeGraph(String pathname, String filename) {
         try {
             graphName = filename;
-            Scanner reader = new Scanner( new File( filename ) );
+            Scanner reader = new Scanner( new File( pathname + filename ) );
             System.out.println( "\n" + filename );
             numVertex = reader.nextInt();
             G = new GraphNode[numVertex];
@@ -111,7 +111,10 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph1 = new Graph();
-        graph1.makeGraph( "digraph1.txt" );
+        String srcDir = System.getProperty("user.dir");
+        String s = System.getProperty("file.separator");
+        String pathname = srcDir+s+"Assignments"+s+"src"+s+"assn7_wordNet_graphs"+s;
+        graph1.makeGraph(pathname , "digraph1.txt");
         //System.out.println(graph.toString());
         int[] set1 = {7, 10, 2};
         int[] set2 = {7, 17, 5, 11, 4, 23};
@@ -123,7 +126,7 @@ public class Graph {
         graph1.outcast( set1 );
 
         Graph graph2 = new Graph();
-        graph2.makeGraph( "digraph2.txt" );
+        graph2.makeGraph( pathname , "digraph2.txt" );
         //System.out.println(graph2.toString());
         graph2.lca( 3, 24 );
 
