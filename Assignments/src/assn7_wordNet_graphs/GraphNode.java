@@ -3,10 +3,10 @@ package assn7_wordNet_graphs;
 import java.util.LinkedList;
 
 public class GraphNode {
-    private int nodeID;
+    int nodeID;
     PathInfo p1;
     PathInfo p2;
-    private LinkedList<EdgeInfo> succ;
+    LinkedList<EdgeInfo> succ;
 
     public GraphNode(){
         this(0);

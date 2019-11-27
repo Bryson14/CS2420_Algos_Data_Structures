@@ -30,6 +30,7 @@ public class Graph {
         return true;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( "The Graph " + graphName + " \n" );
@@ -92,6 +93,8 @@ public class Graph {
      */
     public int lca(int v1, int v2) {
         // Compute lca
+
+
         PathInfo best = new PathInfo();
         System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: " + best.dist + " Ancestor " + best.pred + " Path:" + reportPath( v1, v2, best.pred ) );
 
@@ -101,8 +104,23 @@ public class Graph {
 
     public int outcast(int[] v) {
         int outcast = -1;
+        int longest = -1;
 
-        System.out.println( "The outcast of " + Arrays.toString( v ) + " is " + outcast );
+        for (int i : v) {
+            int dist = 0;
+
+            for (int j : v) {
+                dist += lca(i,j);
+            }
+            if (longest == -1 || dist > longest) {
+                outcast = i;
+                longest = dist;
+                clearAllPred();
+            }
+        }
+
+        System.out.println( "The outcast of " + Arrays.toString( v ) + " is "
+                + outcast + "with a distance of " + longest + ".");
         return outcast;
 
     }
@@ -112,7 +130,7 @@ public class Graph {
         String srcDir = System.getProperty("user.dir");
         String s = System.getProperty("file.separator");
         String pathname = srcDir+s+"Assignments"+s+"src"+s+"assn7_wordNet_graphs"+s;
-        graph1.makeGraph(pathname , "digraph1.txt");
+        graph1.makeGraph(pathname , "digraph2.txt");
         //System.out.println(graph.toString());
         int[] set1 = {7, 10, 2};
         int[] set2 = {7, 17, 5, 11, 4, 23};
