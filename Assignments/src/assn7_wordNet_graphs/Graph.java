@@ -78,7 +78,12 @@ public class Graph {
      */
     public String reportPath(int v1, int v2, int anc) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Wish I knew the path from " + v1 + " " + anc + " " + v2 );
+        int left = v1;
+        int right = v2;
+
+        while (G[v1].succ.size() > 0) {
+            sb.append(v1);
+        }
 
         return sb.toString();
     }
@@ -90,52 +95,49 @@ public class Graph {
      * @param v2: second vertex
      * @return returns the length of the shortest ancestral path.
      */
-    public int lca(int v1, int v2) {
+    public int lca(int v1, int v2, boolean print) {
         // Compute lca
-        alterPathInfo(v1, 0, true);
-        alterPathInfo(v2, 0, false);
-
+        alterPathInfo(v1, v1, 0, true);
+        alterPathInfo(v2, v2, 0, false);
 
         PathInfo best = new PathInfo();
-        best.set(5,10);
-        System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: " + best.dist + " Ancestor " + best.pred + " Path:" + reportPath( v1, v2, best.pred ) );
+
+        // now that the information is all set, find the smallest of all the paths
+        for (GraphNode node: G) {
+            int sum = node.p1.dist + node.p2.dist;
+            if (sum < best.dist) {
+                best.dist = sum;
+                best.pred = node.nodeID;
+            }
+        }
+        if (print) {
+            System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: "
+                    + best.dist + " Ancestor " + best.pred + " Path:"  );
+        }
 
         clearAllPred();
         return best.dist;
     }
 
-    public void alterPathInfo(int pred, int dist, boolean swap) {
+    public void alterPathInfo(int pred, int curr, int dist, boolean swap) {
 
         if (swap) {
             //make sure that you not overriding a more direct route in case or two paths
-            if (G[pred].p1.dist > dist) {
-                G[pred].p1.set(pred, dist);
+            if (G[curr].p1.dist > dist) {
+                G[curr].p1.set(pred, dist);
             }
         }
         else {
-            if (G[pred].p2.dist > dist) {
-                G[pred].p2.set(pred, dist);
+            if (G[curr].p2.dist > dist) {
+                G[curr].p2.set(pred, dist);
             }
         }
 
-        if (G[pred].succ.size() > 0) { // pred is not the root
-            for (EdgeInfo edge: G[pred].succ) {
-                alterPathInfo(edge.to, ++dist, swap);
+        if (G[curr].succ.size() > 0) { // pred is not the root
+            for (EdgeInfo edge: G[curr].succ) {
+                alterPathInfo(curr, edge.to, dist + 1, swap); //a number is its own predecessor the first time through
             }
         }
-    }
-
-    public int[] ancestor(int v1, int v2, int dist) {
-        //returns v1 or v2 if one is the overall root
-        if (G[v2].succ.size() <= 0) {
-            int[] x = {v2, dist};
-            return x;
-        }
-        if (G[v1].succ.size() <= 0) {
-            int[] x = {v1, dist};
-            return x;
-        }
-        return new int[]{1,2};
     }
 
     public int outcast(int[] v) {
@@ -146,7 +148,7 @@ public class Graph {
             int dist = 0;
 
             for (int j : v) {
-                dist += lca(i,j);
+                dist += lca(i,j, false);
             }
             if (longest == -1 || dist > longest) {
                 outcast = i;
@@ -156,7 +158,7 @@ public class Graph {
         }
 
         System.out.println( "The outcast of " + Arrays.toString( v ) + " is "
-                + outcast + "with a distance of " + longest + ".");
+                + outcast + " with a distance of " + longest + ".");
         return outcast;
 
     }
@@ -172,15 +174,15 @@ public class Graph {
         int[] set2 = {7, 17, 5, 11, 4, 23};
         int[] set3 = {10, 17, 13};
 
-        graph1.lca( 5, 6 );
-        graph1.lca( 3, 7 );
-        graph1.lca( 9, 1 );
+        graph1.lca( 5, 6 , true);
+        graph1.lca( 3, 7 , true);
+        graph1.lca( 9, 1 , true);
         graph1.outcast( set1 );
 
         Graph graph2 = new Graph();
         graph2.makeGraph( pathname , "digraph2.txt" );
         System.out.println(graph2.toString());
-        graph2.lca( 3, 24 );
+        graph2.lca( 3, 24 , true);
 
         graph2.outcast( set3 );
         graph2.outcast( set2 );
