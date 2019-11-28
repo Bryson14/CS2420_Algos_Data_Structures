@@ -76,16 +76,23 @@ public class Graph {
      * @param anc: ancestor of v1 and v2
      * @return the path
      */
-    public String reportPath(int v1, int v2, int anc) {
+    public StringBuilder reportPath(int v1, int v2, int anc) {
+        int idx = anc;
         StringBuilder sb = new StringBuilder();
-        int left = v1;
-        int right = v2;
+        sb.append(anc);
 
-        while (G[v1].succ.size() > 0) {
-            sb.append(v1);
+        //first half
+        while (G[idx].p1.dist > 0) {
+            sb.insert(0," ").insert(0,G[idx].p1.pred);
+            idx = G[idx].p1.pred;
         }
-
-        return sb.toString();
+        idx = anc;
+        // 2nd half
+        while (G[idx].p2.dist > 0) {
+            sb.append(" ").append(G[idx].p2.pred);
+            idx = G[idx].p2.pred;
+        }
+        return sb;
     }
 
     /**
@@ -112,7 +119,7 @@ public class Graph {
         }
         if (print) {
             System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: "
-                    + best.dist + " Ancestor " + best.pred + " Path:"  );
+                    + best.dist + " Ancestor " + best.pred + " Path:" + reportPath(v1, v2, best.pred) );
         }
 
         clearAllPred();
@@ -122,7 +129,7 @@ public class Graph {
     public void alterPathInfo(int pred, int curr, int dist, boolean swap) {
 
         if (swap) {
-            //make sure that you not overriding a more direct route in case or two paths
+            //make sure that you're not overriding a more direct route in case or two paths
             if (G[curr].p1.dist > dist) {
                 G[curr].p1.set(pred, dist);
             }
@@ -156,11 +163,9 @@ public class Graph {
                 clearAllPred();
             }
         }
-
         System.out.println( "The outcast of " + Arrays.toString( v ) + " is "
                 + outcast + " with a distance of " + longest + ".");
         return outcast;
-
     }
 
     public static void main(String[] args) {
