@@ -9,7 +9,7 @@ public class Graph {
     private String graphName;  //The file from which the graph was created.
 
 
-    public Graph() {
+    private Graph() {
         this.numVertex = 0;
         this.graphName = "";
     }
@@ -32,14 +32,14 @@ public class Graph {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "The Graph " + graphName + " \n" );
+        sb.append("The Graph ").append(graphName).append(" \n" );
         for (int i = 0; i < numVertex; i++) {
             sb.append( G[i].toString() );
         }
         return sb.toString();
     }
 
-    public void makeGraph(String pathname, String filename) {
+    private void makeGraph(String pathname, String filename) {
         try {
             graphName = filename;
             Scanner reader = new Scanner( new File( pathname + filename ) );
@@ -61,7 +61,7 @@ public class Graph {
     }
 
 
-    public void clearAllPred() {
+    private void clearAllPred() {
         for (int i = 0; i < numVertex; i++) {
             G[i].p1.clear();
             G[i].p2.clear();
@@ -71,12 +71,10 @@ public class Graph {
     /**
      * Find the path from v1 to v2 going through anc.
      *
-     * @param v1:  first vertex
-     * @param v2:  second vertex
      * @param anc: ancestor of v1 and v2
      * @return the path
      */
-    public StringBuilder reportPath(int v1, int v2, int anc) {
+    private StringBuilder reportPath(int anc) {
         int idx = anc;
         StringBuilder sb = new StringBuilder();
         sb.append(anc);
@@ -102,7 +100,7 @@ public class Graph {
      * @param v2: second vertex
      * @return returns the length of the shortest ancestral path.
      */
-    public int lca(int v1, int v2, boolean print) {
+    private int lca(int v1, int v2, boolean print) {
         // Compute lca
         alterPathInfo(v1, v1, 0, true);
         alterPathInfo(v2, v2, 0, false);
@@ -119,14 +117,14 @@ public class Graph {
         }
         if (print) {
             System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: "
-                    + best.dist + " Ancestor " + best.pred + " Path:" + reportPath(v1, v2, best.pred) );
+                    + best.dist + " Ancestor " + best.pred + " Path:" + reportPath(best.pred) );
         }
 
         clearAllPred();
         return best.dist;
     }
 
-    public void alterPathInfo(int pred, int curr, int dist, boolean swap) {
+    private void alterPathInfo(int pred, int curr, int dist, boolean swap) {
 
         if (swap) {
             //make sure that you're not overriding a more direct route in case or two paths
@@ -147,7 +145,7 @@ public class Graph {
         }
     }
 
-    public int outcast(int[] v) {
+    private int outcast(int[] v) {
         int outcast = -1;
         int longest = -1;
 
@@ -187,7 +185,13 @@ public class Graph {
         Graph graph2 = new Graph();
         graph2.makeGraph( pathname , "digraph2.txt" );
         System.out.println(graph2.toString());
+
         graph2.lca( 3, 24 , true);
+        graph2.lca(21,23, true);
+        graph2.lca(3,13, true);
+        graph2.lca(24,14, true);
+        graph2.lca(1,10, true);
+        graph2.lca(0,17, true);
 
         graph2.outcast( set3 );
         graph2.outcast( set2 );
