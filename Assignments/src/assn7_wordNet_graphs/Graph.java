@@ -1,8 +1,7 @@
 package assn7_wordNet_graphs;
 
 import java.io.File;
-import java.util.Scanner;
-import java.util.Arrays;
+import java.util.*;
 
 public class Graph {
     private int numVertex;  // Number of vertices in the graph.
@@ -93,13 +92,50 @@ public class Graph {
      */
     public int lca(int v1, int v2) {
         // Compute lca
+        alterPathInfo(v1, 0, true);
+        alterPathInfo(v2, 0, false);
 
 
         PathInfo best = new PathInfo();
+        best.set(5,10);
         System.out.println( graphName + " Best lca " + v1 + " " + v2 + " Distance: " + best.dist + " Ancestor " + best.pred + " Path:" + reportPath( v1, v2, best.pred ) );
 
         clearAllPred();
         return best.dist;
+    }
+
+    public void alterPathInfo(int pred, int dist, boolean swap) {
+
+        if (swap) {
+            //make sure that you not overriding a more direct route in case or two paths
+            if (G[pred].p1.dist > dist) {
+                G[pred].p1.set(pred, dist);
+            }
+        }
+        else {
+            if (G[pred].p2.dist > dist) {
+                G[pred].p2.set(pred, dist);
+            }
+        }
+
+        if (G[pred].succ.size() > 0) { // pred is not the root
+            for (EdgeInfo edge: G[pred].succ) {
+                alterPathInfo(edge.to, ++dist, swap);
+            }
+        }
+    }
+
+    public int[] ancestor(int v1, int v2, int dist) {
+        //returns v1 or v2 if one is the overall root
+        if (G[v2].succ.size() <= 0) {
+            int[] x = {v2, dist};
+            return x;
+        }
+        if (G[v1].succ.size() <= 0) {
+            int[] x = {v1, dist};
+            return x;
+        }
+        return new int[]{1,2};
     }
 
     public int outcast(int[] v) {
@@ -130,20 +166,20 @@ public class Graph {
         String srcDir = System.getProperty("user.dir");
         String s = System.getProperty("file.separator");
         String pathname = srcDir+s+"Assignments"+s+"src"+s+"assn7_wordNet_graphs"+s;
-        graph1.makeGraph(pathname , "digraph2.txt");
+        graph1.makeGraph(pathname , "digraph1.txt");
         //System.out.println(graph.toString());
         int[] set1 = {7, 10, 2};
         int[] set2 = {7, 17, 5, 11, 4, 23};
         int[] set3 = {10, 17, 13};
 
-        graph1.lca( 3, 7 );
         graph1.lca( 5, 6 );
+        graph1.lca( 3, 7 );
         graph1.lca( 9, 1 );
         graph1.outcast( set1 );
 
         Graph graph2 = new Graph();
         graph2.makeGraph( pathname , "digraph2.txt" );
-        //System.out.println(graph2.toString());
+        System.out.println(graph2.toString());
         graph2.lca( 3, 24 );
 
         graph2.outcast( set3 );
